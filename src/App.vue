@@ -3,9 +3,9 @@
 </script>
 
 <template>
-    <el-carousel :interval="4000" type="card" indicator-position="outside" :height="screenHeight + 'px'" width="100%">
+    <el-carousel :interval="4000" type="card"  :height=screenHeight :width= screenWidth>
         <el-carousel-item v-for="item in imgList" :key="item">
-            <img :src="item" alt="img" style="max-width:100%;max-height:100%"/>
+            <img :src="item" alt="img" style="object-fit: scale-down; width:100%; height:100%"/>
         </el-carousel-item>
     </el-carousel>
 </template>
@@ -23,22 +23,29 @@ export default {
                 '/img/lixue6.jpg',
                 '/img/lixue7.jpg',
             ],
-            screenHeight: 0
+            screenHeight: '',
+            screenWidth: ''
         }
     },
     created() {
-        this.screenHeight = this.autoHeight()
+
     },
     mounted() {
-        // window.onresize = () => {
-        //     return (() => {
-        //         this.screenHeight = document.documentElement.clientHeight + 'px'
-        //     })
-        // }
+        this.screenWidth = window.innerWidth + "px"
+        this.setSize()
+
+        window.onresize = () => {
+            this.screenWidth = window.innerWidth + "px"
+            this.setSize()
+        }
     },
     methods: {
-        autoHeight(){
-            return document.documentElement.clientHeight + 'px'
+        // autoHeight(){
+        //     return document.documentElement.clientHeight + 'px'
+        // },
+        setSize:function () {
+            this.screenHeight = 400 / 1920 * this.screenWidth + "px"
+            this.screenWidth = 400 / 1920 * this.screenWidth + "px"
         }
     }
 }
@@ -46,6 +53,13 @@ export default {
 
 
 <style scoped>
+.el-carousel__item h4 {
+    color: #475669;
+    opacity: 0.75;
+    line-height: 200px;
+    margin: 0;
+    text-align: center;
+}
 
 .el-carousel__item:nth-child(2n) {
     background-color: #99a9bf;
