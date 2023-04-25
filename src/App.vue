@@ -16,11 +16,12 @@ export default {
         return {
             imgList: [
                 '/img/lixue1.jpg',
-                '/img/lixue1.jpg',
-                '/img/lixue1.jpg',
-                '/img/lixue1.jpg',
-                '/img/lixue1.jpg',
-                '/img/lixue1.jpg',
+                '/img/lixue2.jpg',
+                '/img/lixue3.jpg',
+                '/img/lixue4.jpg',
+                '/img/lixue5.jpg',
+                '/img/lixue6.jpg',
+                '/img/lixue7.jpg',
             ],
             screenHeight: 0
         }
