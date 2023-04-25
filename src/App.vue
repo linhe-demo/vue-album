@@ -15,14 +15,14 @@
         data() {
             return {
                 imgList: [
-                    '/src/assets/img/lixue1.jpg',
-                    '/src/assets/img/lixue1.jpg',
-                    '/src/assets/img/lixue1.jpg',
-                    '/src/assets/img/lixue1.jpg',
-                    '/src/assets/img/lixue1.jpg',
-                    '/src/assets/img/lixue1.jpg',
+                    '/home/vue/src/assets/img/lixue1.jpg',
+                    '/home/vue/src/assets/img/lixue1.jpg',
+                    '/home/vue/src/assets/img/lixue1.jpg',
+                    '/home/vue/src/assets/img/lixue1.jpg',
+                    '/home/vue/src/assets/img/lixue1.jpg',
+                    '/home/vue/src/assets/img/lixue1.jpg',
                 ],
-                bannerHeight: 500
+                bannerHeight: 0
             }
         },
         mounted () {
