@@ -45,7 +45,7 @@ export default {
       this.textInfo = this.images[id].text
     },
     getConfig() {
-      axios.post('http://127.0.0.1:8806/api/v1/life/moment', {"num": 10})
+      axios.post('http://150.158.82.218:8806/api/v1/life/moment', {"num": 10})
           .then(response => {
             this.images = response.data.data
           })
