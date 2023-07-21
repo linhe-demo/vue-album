@@ -1,6 +1,12 @@
 <template>
+  <div style="width: 50px;height: 50px;z-index: 200;">
+    <audio ref="audio" :src="audioSrc"></audio>
+    <button @click="togglePlay" :class="{ 'playing': isPlaying }" class="music-btn">
+      <i class="el-icon-video-play"></i>
+    </button>
+  </div>
   <div>
-    <el-carousel :interval="5000" height="36rem" @change="changeImg" indicator-position="outside">
+    <el-carousel :interval="5000" class="custom-carousel" height="36rem" @change="changeImg" indicator-position="outside">
       <el-carousel-item v-show="showCarousel" v-for="(item,index) in images" :key="index" @change="showText(index)">
         <el-image
             :class="className"
@@ -23,7 +29,9 @@ export default {
       images: [],
       className: "",
       textInfo: "网络不好，请耐心等待哦！",
-      showCarousel: false
+      showCarousel: false,
+      audioSrc: "music/jcldxt.mp3",
+      isPlaying: false,
     }
   },
   mounted() {
@@ -58,6 +66,15 @@ export default {
       if (this.onloadNum === 0) {
         this.showCarousel = true
       }
+    },
+    togglePlay() {
+      const audio = this.$refs.audio;
+      if (this.isPlaying) {
+        audio.pause();
+      } else {
+        audio.play();
+      }
+      this.isPlaying = !this.isPlaying;
     }
   }
 }
@@ -72,5 +89,24 @@ export default {
 }
 .el-carousel__item.is-animating {
   transition: transform 1s ease-in-out;
+}
+.music-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  vertical-align: middle;
+  color: #fff;
+  transition: transform 0.5s ease-in-out;
+}
+
+.music-btn.playing {
+  transform: rotate(360deg);
+}
+.custom-carousel {
+  border-radius: 10px;
+  margin-top: -40px;
 }
 </style>
