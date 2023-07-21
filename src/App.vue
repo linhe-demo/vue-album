@@ -43,14 +43,13 @@ export default {
             this.screenWidth = 400 / 1920 * this.screenWidth + "px"
         },
         getConfig(){
-            this.imgList = [{"imgUrl":"img/lixue1.jpg", "text":"灵动遇可爱，光影伴柔光，凡花来增艳，恰好月下逢"}];
-            // axios.post('http://150.158.82.218:8806/api/v1/life/moment', {"num":10})
-            //     .then(response => {
-            //         this.imgList = [{"imgUrl":"img/lixue1.jpg", "text":"灵动遇可爱，光影伴柔光，凡花来增艳，恰好月下逢"}];
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            axios.post('http://150.158.82.218:8806/api/v1/life/moment', {"num":10})
+                .then(response => {
+                    this.imgList = response.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     }
 }
