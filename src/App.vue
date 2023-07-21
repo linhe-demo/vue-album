@@ -1,76 +1,76 @@
-<script setup>
-
-</script>
-
 <template>
-    <el-carousel :interval="4000" type="card" :height=screenHeight :width=screenWidth>
-        <el-carousel-item v-for="item in imgList" :key="item">
-            <img :src="item.imgUrl" alt="img" style="object-fit: scale-down; width:100%; height:100%"/>
-            <div class="text">{{ item.text }}</div>
-        </el-carousel-item>
+  <div>
+    <el-carousel :interval="5000" height="36rem" @change="changeImg" indicator-position="outside">
+      <el-carousel-item v-show="showCarousel" v-for="(item,index) in images" :key="index" @change="showText(index)">
+        <el-image
+            :class="className"
+            style="width:100%; height:100%; object-fit: cover;"
+            :src="item.imgUrl"
+            @load="onloadImg()"></el-image>
+      </el-carousel-item>
     </el-carousel>
+    <div style="text-align: center">{{textInfo}}</div>
+  </div>
 </template>
-
 <script>
 import axios from "axios";
 
 export default {
-    data() {
-        return {
-            imgList: [],
-            screenHeight: '',
-            screenWidth: '',
-        }
-    },
-    created() {
-
-    },
-    mounted() {
-        this.screenWidth = window.innerWidth + "px"
-        this.setSize()
-        this.getConfig()
-        window.onresize = () => {
-            this.screenWidth = window.innerWidth + "px"
-            this.setSize()
-        }
-    },
-    methods: {
-        // autoHeight(){
-        //     return document.documentElement.clientHeight + 'px'
-        // },
-        setSize: function () {
-            this.screenHeight = 400 / 1920 * this.screenWidth + "px"
-            this.screenWidth = 400 / 1920 * this.screenWidth + "px"
-        },
-        getConfig(){
-            axios.post('http://150.158.82.218:8806/api/v1/life/moment', {"num":10})
-                .then(response => {
-                    this.imgList = response.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        }
+  name: "Index",
+  data() {
+    return {
+      onloadNum: 10,
+      images: [],
+      className: "",
+      textInfo: "网络不好，请耐心等待哦！",
+      showCarousel: false
     }
+  },
+  mounted() {
+    this.className = "lun-img-two";
+    setTimeout(() => {
+      this.className = "lun-img";
+    }, 300);
+    this.getConfig()
+  },
+  methods: {
+    changeImg: function (e) {
+      this.className = "lun-img-two";
+      setTimeout(() => {
+        this.className = "lun-img";
+      }, 300);
+      this.showText(e)
+    },
+    showText(id){
+      this.textInfo = this.images[id].text
+    },
+    getConfig() {
+      axios.post('http://127.0.0.1:8806/api/v1/life/moment', {"num": 10})
+          .then(response => {
+            this.images = response.data.data
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    },
+    onloadImg() {
+      this.onloadNum -= 1
+      if (this.onloadNum === 0) {
+        this.showCarousel = true
+      }
+    }
+  }
 }
 </script>
-
-
 <style scoped>
-.el-carousel__item h4 {
-    color: #475669;
-    opacity: 0.75;
-    line-height: 200px;
-    margin: 0;
-    text-align: center;
+.lun-img {
+  transition: all 4s;
+  transform: scale(1.5);
 }
-
-.el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
+.lun-img-two {
+  transform: scale(1);
 }
-
-.el-carousel__item:nth-child(2n + 1) {
-    background-color: #d3dce6;
+.el-carousel__item.is-animating {
+  transition: transform 1s ease-in-out;
 }
 </style>
-
