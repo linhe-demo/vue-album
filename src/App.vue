@@ -3,28 +3,23 @@
 </script>
 
 <template>
-    <el-carousel :interval="4000" type="card"  :height=screenHeight :width= screenWidth>
+    <el-carousel :interval="4000" type="card" :height=screenHeight :width=screenWidth>
         <el-carousel-item v-for="item in imgList" :key="item">
-            <img :src="item" alt="img" style="object-fit: scale-down; width:100%; height:100%"/>
+            <img :src="item.imgUrl" alt="img" style="object-fit: scale-down; width:100%; height:100%"/>
+            <div class="text">{{ item.text }}</div>
         </el-carousel-item>
     </el-carousel>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
     data() {
         return {
-            imgList: [
-                '/img/lixue1.jpg',
-                '/img/lixue2.jpg',
-                '/img/lixue3.jpg',
-                '/img/lixue4.jpg',
-                '/img/lixue5.jpg',
-                '/img/lixue6.jpg',
-                '/img/lixue7.jpg',
-            ],
+            imgList: [],
             screenHeight: '',
-            screenWidth: ''
+            screenWidth: '',
         }
     },
     created() {
@@ -33,7 +28,7 @@ export default {
     mounted() {
         this.screenWidth = window.innerWidth + "px"
         this.setSize()
-
+        this.getConfig()
         window.onresize = () => {
             this.screenWidth = window.innerWidth + "px"
             this.setSize()
@@ -43,9 +38,19 @@ export default {
         // autoHeight(){
         //     return document.documentElement.clientHeight + 'px'
         // },
-        setSize:function () {
+        setSize: function () {
             this.screenHeight = 400 / 1920 * this.screenWidth + "px"
             this.screenWidth = 400 / 1920 * this.screenWidth + "px"
+        },
+        getConfig(){
+            this.imgList = [{"imgUrl":"img/lixue1.jpg", "text":"灵动遇可爱，光影伴柔光，凡花来增艳，恰好月下逢"}];
+            // axios.post('http://150.158.82.218:8806/api/v1/life/moment', {"num":10})
+            //     .then(response => {
+            //         this.imgList = [{"imgUrl":"img/lixue1.jpg", "text":"灵动遇可爱，光影伴柔光，凡花来增艳，恰好月下逢"}];
+            //     })
+            //     .catch(error => {
+            //         console.log(error);
+            //     });
         }
     }
 }
