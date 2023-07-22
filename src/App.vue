@@ -91,6 +91,9 @@ export default {
 .el-carousel__item.is-animating {
   transition: transform 1s ease-in-out;
 }
+#app{
+  padding: 1rem!important;
+}
 .music-btn {
   position: fixed;
   border-color: white;
