@@ -1,8 +1,7 @@
 <template>
-  <div style="width: 50px;height: 50px;z-index: 200;">
+  <div style="z-index: 200;">
     <audio ref="audio" :src="audioSrc"></audio>
-    <button @click="togglePlay" :class="{ 'playing': isPlaying }" class="music-btn">
-      <i class="el-icon-video-play"></i>
+    <button @click="togglePlay" :class="{ 'isPlaying': isPlaying }" class="music-btn">
     </button>
   </div>
   <div>
@@ -32,6 +31,7 @@ export default {
       showCarousel: false,
       audioSrc: "music/jcldxt.mp3",
       isPlaying: false,
+
     }
   },
   mounted() {
@@ -74,6 +74,7 @@ export default {
       } else {
         audio.play();
       }
+
       this.isPlaying = !this.isPlaying;
     }
   }
@@ -92,21 +93,31 @@ export default {
 }
 .music-btn {
   position: fixed;
+  border-color: white;
   top: 20px;
   left: 20px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   vertical-align: middle;
-  color: #fff;
-  transition: transform 0.5s ease-in-out;
+  background-image: url("././public/img/music-icon.jpg");
+  background-size: cover;
 }
 
-.music-btn.playing {
-  transform: rotate(360deg);
+.isPlaying {
+  animation: rotate 3s linear infinite;
 }
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .custom-carousel {
   border-radius: 10px;
-  margin-top: -40px;
 }
 </style>
