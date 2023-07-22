@@ -5,7 +5,7 @@
     </button>
   </div>
   <div>
-    <el-carousel :interval="5000" class="custom-carousel" height="36rem" @change="changeImg" indicator-position="outside">
+    <el-carousel :interval="5000" class="custom-carousel" @change="changeImg" indicator-position="outside">
       <el-carousel-item v-show="showCarousel" v-for="(item,index) in images" :key="index" @change="showText(index)">
         <el-image
             :class="className"
@@ -91,6 +91,9 @@ export default {
 .el-carousel__item.is-animating {
   transition: transform 1s ease-in-out;
 }
+.el-carousel__container {
+  height: 90%!important;
+}
 .music-btn {
   position: fixed;
   border-color: white;
@@ -100,7 +103,7 @@ export default {
   height: 50px;
   border-radius: 50%;
   vertical-align: middle;
-  background-image: url("././public/img/music-icon.jpg");
+  background-image: url("../public/img/music-icon.jpg");
   background-size: cover;
 }
 
@@ -116,8 +119,8 @@ export default {
     transform: rotate(360deg);
   }
 }
-
 .custom-carousel {
   border-radius: 10px;
+  height: 80vh
 }
 </style>
