@@ -91,9 +91,6 @@ export default {
 .el-carousel__item.is-animating {
   transition: transform 1s ease-in-out;
 }
-.el-carousel__container {
-  height: 90%!important;
-}
 .music-btn {
   position: fixed;
   border-color: white;
@@ -121,6 +118,5 @@ export default {
 }
 .custom-carousel {
   border-radius: 10px;
-  height: 80vh
 }
 </style>
