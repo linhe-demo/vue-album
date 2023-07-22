@@ -5,7 +5,7 @@
     </button>
   </div>
   <div>
-    <el-carousel :interval="5000" class="custom-carousel" @change="changeImg" indicator-position="outside">
+    <el-carousel :interval="5000" class="custom-carousel" height="35rem" @change="changeImg" indicator-position="outside">
       <el-carousel-item v-show="showCarousel" v-for="(item,index) in images" :key="index" @change="showText(index)">
         <el-image
             :class="className"
@@ -116,6 +116,7 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 .custom-carousel {
   border-radius: 10px;
 }
