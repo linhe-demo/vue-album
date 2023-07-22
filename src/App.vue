@@ -14,8 +14,9 @@
             @load="onloadImg()"></el-image>
       </el-carousel-item>
     </el-carousel>
-    <div style="text-align: center">{{textInfo}}</div>
+    <div style="text-align: center;font-weight: bold;color: #409eff">{{textInfo}}</div>
   </div>
+  <div style="color:#adadad;text-align: center;margin-top: 3px;font-size: 10px;">@copyright 2021-{{currentYear}} by 林鹤</div>
 </template>
 <script>
 import axios from "axios";
@@ -31,7 +32,7 @@ export default {
       showCarousel: false,
       audioSrc: "music/jcldxt.mp3",
       isPlaying: false,
-
+      currentYear: ""
     }
   },
   mounted() {
@@ -40,6 +41,8 @@ export default {
       this.className = "lun-img";
     }, 300);
     this.getConfig()
+    // Set the currentYear data property
+    this.currentYear = new Date().getFullYear()
   },
   methods: {
     changeImg: function (e) {
@@ -73,6 +76,7 @@ export default {
         audio.pause();
       } else {
         audio.play();
+        audio.loop = true
       }
 
       this.isPlaying = !this.isPlaying;
