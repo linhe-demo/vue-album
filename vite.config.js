@@ -29,6 +29,7 @@ export default defineConfig({
     define: {
         'process.env': {
             // 'BASE_URL': 'http://150.158.82.218:8806'
+            'REQUEST_URL': 'http://150.158.82.218:8806'
         }
     }
 })
