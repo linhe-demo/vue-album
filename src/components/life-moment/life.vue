@@ -126,7 +126,7 @@ export default {
   border-radius: 50%;
   vertical-align: middle;
   background: transparent;
-  background-image: url("../public/img/play.png");
+  background-image: url("http://150.158.82.218/images/play.png");
   background-size: cover;
 }
 
