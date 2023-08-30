@@ -1,7 +1,7 @@
 vue.config.js
 
 module.exports = {
-    publicPath: '/',
+    publicPath: './',
     devServer: {
         port: 8080
     },
