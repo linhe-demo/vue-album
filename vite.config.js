@@ -25,5 +25,10 @@ export default defineConfig({
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
+    },
+    define: {
+        'process.env': {
+            // 'BASE_URL': 'http://150.158.82.218:8806'
+        }
     }
 })
