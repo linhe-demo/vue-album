@@ -5,7 +5,8 @@
     </button>
   </div>
   <div>
-    <el-carousel :interval="5000" class="custom-carousel" height="35rem" @change="changeImg" indicator-position="outside">
+    <el-carousel :interval="5000" class="custom-carousel" height="35rem" @change="changeImg"
+                 indicator-position="outside">
       <el-carousel-item v-show="showCarousel" v-for="(item,index) in images" :key="index" @change="showText(index)">
         <el-image
             :class="className"
@@ -14,12 +15,16 @@
             @load="onloadImg()"></el-image>
       </el-carousel-item>
     </el-carousel>
-    <div style="text-align: center;font-weight: bold;color: #409eff">{{textInfo}}</div>
+    <div style="text-align: center;font-weight: bold;color: #409eff">{{ textInfo }}</div>
   </div>
-  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{currentYear}} by 林鹤</div>
-  <div style="color:#adadad;text-align: center;margin-top: 3px;font-size: 8px;" >
-    <a href="https://beian.miit.gov.cn/" target="_blank" style="text-decoration: none;color:#adadad">豫ICP备2023017522号-1</a>
-    <a href="javascript:" target="_blank" style="text-decoration: none;color:#adadad;margin-left: 5px;">沪公安网备2023017522</a>
+  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by
+    林鹤
+  </div>
+  <div style="color:#adadad;text-align: center;margin-top: 3px;font-size: 8px;">
+    <a href="https://beian.miit.gov.cn/" target="_blank"
+       style="text-decoration: none;color:#adadad">豫ICP备2023017522号-1</a>
+    <a href="javascript:" target="_blank"
+       style="text-decoration: none;color:#adadad;margin-left: 5px;">沪公安网备2023017522</a>
   </div>
 </template>
 <script>
@@ -56,7 +61,7 @@ export default {
       }, 300);
       this.showText(e)
     },
-    showText(id){
+    showText(id) {
       this.textInfo = this.images[id].text
     },
     getConfig() {
@@ -93,20 +98,26 @@ export default {
   transition: all 4s;
   transform: scale(1.5);
 }
+
 .lun-img-two {
   transform: scale(1);
 }
+
 .el-carousel__item.is-animating {
   transition: transform 1s ease-in-out;
 }
+
 .el-carousel__indicator.is-vertical {
   display: none;
 }
-#app{
-  padding: 1rem!important;
+
+#app {
+  padding: 1rem !important;
 }
+
 .music-btn {
   position: fixed;
+  z-index: 100;
   border-color: white;
   top: 20px;
   left: 20px;
@@ -114,7 +125,8 @@ export default {
   height: 50px;
   border-radius: 50%;
   vertical-align: middle;
-  background-image: url("../public/img/music-icon.jpg");
+  background: transparent;
+  background-image: url("../public/img/play.png");
   background-size: cover;
 }
 
