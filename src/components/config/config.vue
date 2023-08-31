@@ -34,7 +34,7 @@
           <img :src="scope.row.imgUrl" alt="图片" style="width: 100px; height: 100px;">
         </template>
       </el-table-column>
-      <el-table-column prop="text" label="文案" align="center" width="480">
+      <el-table-column prop="text" label="文案" align="center">
         <template v-slot="scope" class="specialColor">
           <span style="color: #adadad;font-weight: 400;">{{ scope.row.text }}</span>
         </template>
