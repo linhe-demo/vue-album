@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {createRouter, createWebHistory} from 'vue-router'
 import Life from '../components/life-moment/life.vue'
+import Config from '../components/config/config.vue'
 
 const routes = [
     {
@@ -7,11 +8,11 @@ const routes = [
         name: 'life',
         component: Life
     },
-    // {
-    //     path: '/about',
-    //     name: 'about',
-    //     component: () => import('../views/AboutView.vue')
-    // }
+    {
+        path: '/config',
+        name: 'config',
+        component: Config
+    }
 ]
 
 const router = createRouter({
