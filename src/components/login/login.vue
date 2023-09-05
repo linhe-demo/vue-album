@@ -1,7 +1,6 @@
 <template>
   <div class="login-page">
     <div class="login-form">
-      <div class="title">来将可留姓名</div>
       <el-form ref="loginForm" :model="loginData" @submit.native.prevent>
         <el-form-item label="用户名：" label-width="80px">
           <el-input v-model="loginData.username"></el-input>
@@ -79,16 +78,6 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-}
-.title{
-  position: absolute;
-  /* left: 38%; */
-  top: 33%;
-  /* font-weight: bold; */
-  font-size: 20px;
-  width: 100%;
-  color: white;
-  text-align: center;
 }
 .login-btn {
   width: 100%;
