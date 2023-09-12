@@ -68,11 +68,11 @@ export default {
     getConfig() {
       axios.post(process.env.REQUEST_URL + '/api/v1/life/moment', {"num": 8})
           .then(response => {
-            if (response.data.code !== 200) {
-              this.$router.push({ path: '/' });
-            } else {
+            // if (response.data.code !== 200) {
+            //   this.$router.push({ path: '/' });
+            // } else {
               this.images = response.data.data
-            }
+            // }
           })
           .catch(error => {
             console.log(error);
