@@ -28,7 +28,8 @@
   </div>
 </template>
 <script>
-import instance from "../js/request";
+// import instance from "../js/request";
+import axios from "axios";
 
 export default {
   name: "Index",
@@ -65,7 +66,7 @@ export default {
       this.textInfo = this.images[id].text
     },
     getConfig() {
-      instance.post(process.env.REQUEST_URL + '/api/v1/life/moment', {"num": 8})
+      axios.post(process.env.REQUEST_URL + '/api/v1/life/moment', {"num": 8})
           .then(response => {
             if (response.data.code !== 200) {
               this.$router.push({ path: '/' });
