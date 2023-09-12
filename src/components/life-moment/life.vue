@@ -15,7 +15,7 @@
             @load="onloadImg()"></el-image>
       </el-carousel-item>
     </el-carousel>
-    <div style="text-align: center;font-weight: bold;color: #409eff;margin-top: 10px;">{{ textInfo }}</div>
+    <div style="text-align: center;font-weight: bold;color: #409eff;">{{ textInfo }}</div>
   </div>
   <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by
     林鹤
@@ -148,11 +148,11 @@ export default {
   }
 }
 
-::v-deep .el-carousel {
+:deep .el-carousel {
   height: 90%;
 }
-::v-deep .el-carousel .el-carousel__container {
-  height: 90%;
+:deep .el-carousel .el-carousel__container {
+  height: 94%;
   border-radius: 5px;
 }
 
