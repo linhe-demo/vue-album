@@ -4,8 +4,8 @@
     <button @click="togglePlay" :class="{ 'isPlaying': isPlaying }" class="music-btn">
     </button>
   </div>
-  <div>
-    <el-carousel :interval="5000" class="custom-carousel" height="35rem" @change="changeImg"
+  <div style="height: 90%;">
+    <el-carousel :interval="5000" class="custom-carousel" style="height: 94%" @change="changeImg"
                  indicator-position="outside">
       <el-carousel-item v-show="showCarousel" v-for="(item,index) in images" :key="index" @change="showText(index)">
         <el-image
@@ -15,23 +15,24 @@
             @load="onloadImg()"></el-image>
       </el-carousel-item>
     </el-carousel>
-    <div style="text-align: center;font-weight: bold;color: #409eff">{{ textInfo }}</div>
+    <div style="text-align: center;font-weight: bold;color: #409eff;margin-top: 10px;">{{ textInfo }}</div>
   </div>
-  <!--  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by-->
-  <!--    林鹤-->
-  <!--  </div>-->
+  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by
+    林鹤
+  </div>
   <div style="color:#adadad;text-align: center;margin-top: 3px;font-size: 8px;">
     <a target="_blank" href="https://beian.miit.gov.cn/"
        style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
-      <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">豫ICP备2023017522号-1</p></a>
+      <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">豫ICP备2023017522号-1</p>
+    </a>
     <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41152502000215"
-       style="display:inline-block;text-decoration:none;height:20px;line-height:20px;margin-left: 10px;"><img src="http://150.158.82.218/images/batb.png" style="float:left;"/>
+       style="display:inline-block;text-decoration:none;height:20px;line-height:20px;margin-left: 10px;"><img
+        src="http://www.life-moment.top/images/static/batb.png" style="float:left;"/>
       <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">豫公网安备
         41152502000215号</p></a>
   </div>
 </template>
 <script>
-// import instance from "../js/request";
 import axios from "axios";
 
 export default {
@@ -43,7 +44,7 @@ export default {
       className: "",
       textInfo: "网络不好，请耐心等待哦！",
       showCarousel: false,
-      audioSrc: "music/jcldxt.mp3",
+      audioSrc: process.env.MUSIC_URL + "/jcldxt.mp3",
       isPlaying: false,
       currentYear: ""
     }
@@ -69,13 +70,9 @@ export default {
       this.textInfo = this.images[id].text
     },
     getConfig() {
-      axios.post('http://150.158.82.218:8806/api/v1/life/moment', {"num": 8})
+      axios.post(process.env.BASE_URL + '/api/v1/life/moment', {"num": 8})
           .then(response => {
-            // if (response.data.code !== 200) {
-            //   this.$router.push({ path: '/' });
-            // } else {
             this.images = response.data.data
-            // }
           })
           .catch(error => {
             console.log(error);
@@ -134,7 +131,7 @@ export default {
   border-radius: 50%;
   vertical-align: middle;
   background: transparent;
-  background-image: url("http://150.158.82.218/images/play.png");
+  background-image: url("http://www.life-moment.top/images/static/play.png");
   background-size: cover;
 }
 
@@ -151,7 +148,15 @@ export default {
   }
 }
 
+::v-deep .el-carousel {
+  height: 90%;
+}
+::v-deep .el-carousel .el-carousel__container {
+  height: 100%;
+}
+
 .custom-carousel {
   border-radius: 10px;
 }
 </style>
+
