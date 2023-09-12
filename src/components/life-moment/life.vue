@@ -1,10 +1,10 @@
 <template>
-  <div style="z-index: 200;">
+  <div v-show="showBtn" style="z-index: 200;">
     <audio ref="audio" :src="audioSrc"></audio>
     <button @click="togglePlay" :class="{ 'isPlaying': isPlaying }" class="music-btn">
     </button>
   </div>
-  <div style="height: 90%;">
+  <div class="context">
     <el-carousel :interval="5000" class="custom-carousel" style="height: 94%" @change="changeImg"
                  indicator-position="outside">
       <el-carousel-item v-show="showCarousel" v-for="(item,index) in images" :key="index" @change="showText(index)">
@@ -39,24 +39,32 @@ export default {
   name: "Index",
   data() {
     return {
-      onloadNum: 10,
+      onloadNum: 8,
       images: [],
       className: "",
       textInfo: "网络不好，请耐心等待哦！",
       showCarousel: false,
+      showBtn:false,
       audioSrc: process.env.MUSIC_URL + "/jcldxt.mp3",
       isPlaying: false,
       currentYear: ""
     }
   },
   mounted() {
+    this.currentYear = new Date().getFullYear()
+    // 根据不同路由跳转不同页面
+    if (!this._isMobile()) {
+      this.textInfo = "本站为手机端网站，请使用手机浏览"
+      return
+    }
+    this.showBtn = true
+    //检查用户是手机还是电脑
     this.className = "lun-img-two";
     setTimeout(() => {
       this.className = "lun-img";
     }, 300);
     this.getConfig()
     // Set the currentYear data property
-    this.currentYear = new Date().getFullYear()
   },
   methods: {
     changeImg: function (e) {
@@ -94,6 +102,10 @@ export default {
       }
 
       this.isPlaying = !this.isPlaying;
+    },
+    _isMobile () {
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+      return flag
     }
   }
 }
@@ -137,6 +149,10 @@ export default {
 
 .isPlaying {
   animation: rotate 3s linear infinite;
+}
+
+.context{
+  height: 90%
 }
 
 @keyframes rotate {
