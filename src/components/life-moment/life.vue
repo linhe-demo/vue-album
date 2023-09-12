@@ -66,7 +66,7 @@ export default {
       this.textInfo = this.images[id].text
     },
     getConfig() {
-      axios.post(process.env.REQUEST_URL + '/api/v1/life/moment', {"num": 8})
+      axios.post('http://150.158.82.218:8806/api/v1/life/moment', {"num": 8})
           .then(response => {
             // if (response.data.code !== 200) {
             //   this.$router.push({ path: '/' });
