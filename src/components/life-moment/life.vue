@@ -152,7 +152,8 @@ export default {
   height: 90%;
 }
 ::v-deep .el-carousel .el-carousel__container {
-  height: 100%;
+  height: 90%;
+  border-radius: 5px;
 }
 
 .custom-carousel {
