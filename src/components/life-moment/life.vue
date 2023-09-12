@@ -17,14 +17,17 @@
     </el-carousel>
     <div style="text-align: center;font-weight: bold;color: #409eff">{{ textInfo }}</div>
   </div>
-<!--  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by-->
-<!--    林鹤-->
-<!--  </div>-->
+  <!--  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by-->
+  <!--    林鹤-->
+  <!--  </div>-->
   <div style="color:#adadad;text-align: center;margin-top: 3px;font-size: 8px;">
-    <a href="https://beian.miit.gov.cn/" target="_blank"
-       style="text-decoration: none;color:#adadad">豫ICP备2023017522号-1</a>
-<!--    <a href="javascript:" target="_blank"-->
-<!--       style="text-decoration: none;color:#adadad;margin-left: 5px;">沪公安网备2023017522</a>-->
+    <a target="_blank" href="https://beian.miit.gov.cn/"
+       style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+      <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">豫ICP备2023017522号-1</p></a>
+    <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41152502000215"
+       style="display:inline-block;text-decoration:none;height:20px;line-height:20px;margin-left: 10px;"><img src="http://150.158.82.218/images/batb.png" style="float:left;"/>
+      <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">豫公网安备
+        41152502000215号</p></a>
   </div>
 </template>
 <script>
@@ -71,7 +74,7 @@ export default {
             // if (response.data.code !== 200) {
             //   this.$router.push({ path: '/' });
             // } else {
-              this.images = response.data.data
+            this.images = response.data.data
             // }
           })
           .catch(error => {
