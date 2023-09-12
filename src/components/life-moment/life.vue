@@ -17,18 +17,18 @@
     </el-carousel>
     <div style="text-align: center;font-weight: bold;color: #409eff">{{ textInfo }}</div>
   </div>
-  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by
-    林鹤
-  </div>
+<!--  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by-->
+<!--    林鹤-->
+<!--  </div>-->
   <div style="color:#adadad;text-align: center;margin-top: 3px;font-size: 8px;">
     <a href="https://beian.miit.gov.cn/" target="_blank"
        style="text-decoration: none;color:#adadad">豫ICP备2023017522号-1</a>
-    <a href="javascript:" target="_blank"
-       style="text-decoration: none;color:#adadad;margin-left: 5px;">沪公安网备2023017522</a>
+<!--    <a href="javascript:" target="_blank"-->
+<!--       style="text-decoration: none;color:#adadad;margin-left: 5px;">沪公安网备2023017522</a>-->
   </div>
 </template>
 <script>
-import axios from "axios";
+import instance from "../js/request";
 
 export default {
   name: "Index",
@@ -65,9 +65,13 @@ export default {
       this.textInfo = this.images[id].text
     },
     getConfig() {
-      axios.post(process.env.REQUEST_URL + '/api/v1/life/moment', {"num": 8})
+      instance.post(process.env.REQUEST_URL + '/api/v1/life/moment', {"num": 8})
           .then(response => {
-            this.images = response.data.data
+            if (response.data.code !== 200) {
+              this.$router.push({ path: '/' });
+            } else {
+              this.images = response.data.data
+            }
           })
           .catch(error => {
             console.log(error);
