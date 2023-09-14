@@ -2,8 +2,13 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index'
 import store from './store/index'
-import common from "./common/common";
+import commonFunc from "./common/common";
+import {nextTick} from "process";
 
-//注意use要在mount之前
-// createApp.prototype.common = common
-createApp(App).use(router, store).mount('#app')
+const app = createApp(App)
+nextTick(() => {
+    app.config.globalProperties.$commonFunc = commonFunc
+})
+app.use(store).use(router).mount('#app')
+
+export default app

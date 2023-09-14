@@ -164,10 +164,10 @@ export default {
   }
 }
 
-:deep .el-carousel {
+::v-deep(.el-carousel) {
   height: 90%;
 }
-:deep .el-carousel .el-carousel__container {
+::v-deep(.el-carousel .el-carousel__container) {
   height: 94%;
   border-radius: 5px;
 }

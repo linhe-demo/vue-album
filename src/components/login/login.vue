@@ -1,38 +1,50 @@
 <template>
   <div class="login-page">
     <div class="login-form">
-      <el-form ref="loginForm" :model="loginData" @submit.native.prevent>
-        <el-form-item label="用户名：" label-width="80px">
-          <el-input v-model="loginData.userName"></el-input>
-        </el-form-item>
-        <el-form-item label="密&nbsp;&nbsp; 码：" label-width="80px">
-          <el-input type="password" v-model="loginData.passWord"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <div class="login-btn">
-            <el-button type="primary" @click="login" class="btn">登录</el-button>
-            <el-button type="primary" @click="register" class="btn">注册</el-button>
-          </div>
-        </el-form-item>
-      </el-form>
+      <div>
+        <el-form ref="loginForm" :model="loginData" @submit.native.prevent>
+          <el-form-item label="用户名：" label-width="80px">
+            <el-input v-model="loginData.userName"></el-input>
+          </el-form-item>
+          <el-form-item label="密&nbsp;&nbsp; 码：" label-width="80px">
+            <el-input type="password" v-model="loginData.passWord"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <div class="login-btn">
+              <el-button type="primary" @click="login" class="btn">登录</el-button>
+              <el-button type="primary" @click="register" class="btn">注册</el-button>
+            </div>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
-  </div>
-  <div style="color:#adadad;text-align: center;margin-top: 5px;font-size: 8px;">
-    <a href="https://beian.miit.gov.cn/" target="_blank"
-       style="text-decoration: none;color:#adadad">豫ICP备2023017522号-1</a>
-    <a href="javascript:" target="_blank"
-       style="text-decoration: none;color:#adadad;margin-left: 5px;">沪公安网备2023017522</a>
+    <div style="color:white;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ this.commonFunc.currentYear }} by
+      林鹤
+    </div>
+    <div style="color:white;text-align: center;margin-top: 3px;font-size: 8px;">
+      <a target="_blank" href="https://beian.miit.gov.cn/"
+         style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+        <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:white;">豫ICP备2023017522号-1</p>
+      </a>
+      <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41152502000215"
+         style="display:inline-block;text-decoration:none;height:20px;line-height:20px;margin-left: 10px;"><img
+          src="http://www.life-moment.top/images/static/batb.png" style="float:left;"/>
+        <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:white;">豫公网安备
+          41152502000215号</p></a>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { getCurrentInstance } from 'vue'
 import {useStore} from 'vuex' // 引入useStore 方法
 
 export default {
   data() {
     return {
       store: {},
+      commonFunc: {},
       loginData: {
         userName: '',
         passWord: ''
@@ -41,11 +53,8 @@ export default {
     };
   },
   mounted() {
-    // if (!this.common.isMobile) {
-    //   alert("本站为手机端网站，请使用手机浏览")
-    //   return
-    // }
     this.store = useStore()
+    this.commonFunc = getCurrentInstance()
   },
   methods: {
     login() {
@@ -58,7 +67,7 @@ export default {
         return
       }
 
-      axios.post(process.env.REQUEST_URL + '/api/v1/user/login', this.loginData)
+      axios.post(process.env.BASE_URL + '/api/v1/user/login', this.loginData)
           .then(response => {
             this.userInfo = response.data.data
             // sessionStorage.setItem('nickname', this.userInfo.nickname);
@@ -93,7 +102,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 90%;
 }
 
 .login-btn {
@@ -103,5 +112,8 @@ export default {
 
 ::v-deep(.el-form-item__label) {
   color: white;
+}
+::v-deep(.el-form--label-right) {
+  margin-top: 120px;
 }
 </style>
