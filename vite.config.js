@@ -30,5 +30,10 @@ export default defineConfig({
             'BASE_URL': 'http://life-moment.top:8806'
             // 'REQUEST_URL': 'http://127.0.0.1:8806'
         }
+    },
+    build: {
+        rollupOptions: {
+            external: ['vuex']
+        }
     }
 })
