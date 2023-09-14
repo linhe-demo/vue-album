@@ -1,12 +1,16 @@
 import axios from 'axios';
 
+
 const instance = axios.create({
-    baseURL: process.env.REQUEST_URL,
+    baseURL: process.env.BASE_URL,
     headers: {
         common: {
-            Authorization: sessionStorage.getItem('token')
+            Authorization: ""
         }
     }
 });
+
+
+
 
 export default instance;

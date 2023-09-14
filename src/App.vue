@@ -10,7 +10,6 @@ import {useRouter} from "vue-router";
 export default {
   name: 'App',
   mounted () {
-
     const router = useRouter()
     // 根据不同路由跳转不同页面
     if (!this._isMobile()) {
@@ -21,7 +20,7 @@ export default {
         }
       })
     } else {
-      this.$router.replace({
+      router.replace({
         path: '/'
       })
     }

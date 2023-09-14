@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       info: '',
-      currentYear: {}
+      currentYear: ""
     }
   },
   mounted() {

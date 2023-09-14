@@ -18,7 +18,7 @@
         </el-form>
       </div>
     </div>
-    <div style="color:white;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ this.commonFunc.currentYear }} by
+    <div style="color:white;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by
       林鹤
     </div>
     <div style="color:white;text-align: center;margin-top: 3px;font-size: 8px;">
@@ -37,8 +37,8 @@
 
 <script>
 import axios from "axios";
-import { getCurrentInstance } from 'vue'
-import {useStore} from 'vuex' // 引入useStore 方法
+import {useStore} from 'vuex'
+import {useRouter} from "vue-router";
 
 export default {
   data() {
@@ -49,12 +49,15 @@ export default {
         userName: '',
         passWord: ''
       },
-      userInfo: []
+      userInfo: [],
+      currentYear: '',
+      route: {}
     };
   },
   mounted() {
+    this.currentYear = new Date().getFullYear()
     this.store = useStore()
-    this.commonFunc = getCurrentInstance()
+    this.route = useRouter()
   },
   methods: {
     login() {
@@ -68,13 +71,14 @@ export default {
       }
 
       axios.post(process.env.BASE_URL + '/api/v1/user/login', this.loginData)
-          .then(response => {
-            this.userInfo = response.data.data
-            // sessionStorage.setItem('nickname', this.userInfo.nickname);
-            // sessionStorage.setItem('token', this.userInfo.token);
-
-            // this.$router.push({ path: '/life' });
-
+          .then(res => {
+            if (res.data.code === 200) {
+              this.store.commit("updateUserToken", res.data.data.token)
+              this.store.commit("updateUserNickname", res.data.data.nickname)
+              this.route.push({ path: '/life' });
+            } else {
+              this.route.push({ path: '/login' });
+            }
           })
           .catch(error => {
             console.log(error);
@@ -113,6 +117,7 @@ export default {
 ::v-deep(.el-form-item__label) {
   color: white;
 }
+
 ::v-deep(.el-form--label-right) {
   margin-top: 120px;
 }

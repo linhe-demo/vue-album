@@ -1,5 +1,5 @@
 <template>
-  <div v-show="showBtn" style="z-index: 200;">
+  <div style="z-index: 200;">
     <audio ref="audio" :src="audioSrc"></audio>
     <button @click="togglePlay" :class="{ 'isPlaying': isPlaying }" class="music-btn">
     </button>
@@ -17,22 +17,26 @@
     </el-carousel>
     <div style="text-align: center;font-weight: bold;color: #409eff;">{{ textInfo }}</div>
   </div>
-  <div style="color:#adadad;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by
-    林鹤
-  </div>
-  <div style="color:#adadad;text-align: center;margin-top: 3px;font-size: 8px;">
-    <a target="_blank" href="https://beian.miit.gov.cn/"
-       style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
-      <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">豫ICP备2023017522号-1</p>
-    </a>
-    <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41152502000215"
-       style="display:inline-block;text-decoration:none;height:20px;line-height:20px;margin-left: 10px;"><img
-        src="http://www.life-moment.top/images/static/batb.png" style="float:left;"/>
-      <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">豫公网安备
-        41152502000215号</p></a>
+  <div style="background-color: #409eff;height: 10%;padding-top:5px;">
+    <div style="color:white;text-align: center;margin-top: 10px;font-size: 10px;">@Copyright 2021-{{ currentYear }} by
+      林鹤
+    </div>
+    <div style="color:white;text-align: center;margin-top: 3px;font-size: 8px;">
+      <a target="_blank" href="https://beian.miit.gov.cn/"
+         style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">
+        <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:white;">豫ICP备2023017522号-1</p>
+      </a>
+      <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41152502000215"
+         style="display:inline-block;text-decoration:none;height:20px;line-height:20px;margin-left: 10px;"><img
+          src="http://www.life-moment.top/images/static/batb.png" style="float:left;"/>
+        <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:white;">豫公网安备
+          41152502000215号</p></a>
+    </div>
   </div>
 </template>
 <script>
+import instance from "../../js/request";
+import {useStore} from 'vuex'
 import axios from "axios";
 
 export default {
@@ -44,27 +48,20 @@ export default {
       className: "",
       textInfo: "网络不好，请耐心等待哦！",
       showCarousel: false,
-      showBtn:false,
       audioSrc: process.env.MUSIC_URL + "/jcldxt.mp3",
       isPlaying: false,
-      currentYear: ""
+      currentYear: "",
+      route: {}
     }
   },
   mounted() {
+    this.store = useStore()
     this.currentYear = new Date().getFullYear()
-    // 根据不同路由跳转不同页面
-    if (!this._isMobile()) {
-      this.textInfo = "本站为手机端网站，请使用手机浏览"
-      return
-    }
-    this.showBtn = true
-    //检查用户是手机还是电脑
     this.className = "lun-img-two";
     setTimeout(() => {
       this.className = "lun-img";
     }, 300);
     this.getConfig()
-    // Set the currentYear data property
   },
   methods: {
     changeImg: function (e) {
@@ -78,10 +75,13 @@ export default {
       this.textInfo = this.images[id].text
     },
     getConfig() {
-      axios.post(process.env.BASE_URL + '/api/v1/life/moment', {"num": 8})
-          .then(response => {
-            this.images = response.data.data
-          })
+      axios.post(process.env.BASE_URL + '/api/v1/life/moment', {"num": 8}, {
+        headers: {
+          'Authorization': this.store.state.token
+        }
+      }).then(response => {
+        this.images = response.data.data
+      })
           .catch(error => {
             console.log(error);
           });
@@ -102,10 +102,6 @@ export default {
       }
 
       this.isPlaying = !this.isPlaying;
-    },
-    _isMobile () {
-      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
-      return flag
     }
   }
 }
@@ -142,8 +138,7 @@ export default {
   height: 50px;
   border-radius: 50%;
   vertical-align: middle;
-  background: transparent;
-  background-image: url("http://www.life-moment.top/images/static/play.png");
+  background: transparent url("http://www.life-moment.top/images/static/play.png");
   background-size: cover;
 }
 
@@ -151,7 +146,7 @@ export default {
   animation: rotate 3s linear infinite;
 }
 
-.context{
+.context {
   height: 90%
 }
 
@@ -167,6 +162,7 @@ export default {
 ::v-deep(.el-carousel) {
   height: 90%;
 }
+
 ::v-deep(.el-carousel .el-carousel__container) {
   height: 94%;
   border-radius: 5px;

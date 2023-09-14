@@ -1,11 +1,23 @@
 import {createStore} from 'vuex'
 
-export default createStore({
-    state: {
-        nickname: "",
-        token: ""
+const store = createStore({
+    state() {
+        return {
+            nickname: "",
+            token: ""
+        }
     },
-    mutations: {},
+    // Mutation 修改 state里面数据的唯一方法 只支持同步调用
+    mutations: {
+        updateUserToken(state, token) {
+            state.token = token
+        },
+        updateUserNickname(state, nickname) {
+            state.nickname = nickname
+        }
+    },
     actions: {},
     modules: {}
 })
+
+export default store
