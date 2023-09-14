@@ -10,8 +10,8 @@
         </el-form-item>
         <el-form-item>
           <div class="login-btn">
-            <el-button type="primary" @click="login">登录</el-button>
-            <el-button type="primary" @click="register">注册</el-button>
+            <el-button type="primary" @click="login" class="btn">登录</el-button>
+            <el-button type="primary" @click="register" class="btn">注册</el-button>
           </div>
         </el-form-item>
       </el-form>
@@ -27,16 +27,8 @@
 
 <script>
 import axios from "axios";
-// import {computed} from 'vue'
-// import { useStore } from 'vuex'
-// const store = new useStore();
-// const getAcount =computed(()=>{return store.getters.getToken})
-// const clickActions = ()=>{
-//   store.dispatch('actToken','11111111111111')
-// }
-// const clickMutations = ()=>{
-//   store.commit('updateToken','22222222222222222')
-// }
+import {useStore} from 'vuex' // 引入useStore 方法
+
 export default {
   data() {
     return {
@@ -49,7 +41,11 @@ export default {
     };
   },
   mounted() {
-    // this.store = new useStore();
+    // if (!this.common.isMobile) {
+    //   alert("本站为手机端网站，请使用手机浏览")
+    //   return
+    // }
+    this.store = useStore()
   },
   methods: {
     login() {
@@ -65,8 +61,8 @@ export default {
       axios.post(process.env.REQUEST_URL + '/api/v1/user/login', this.loginData)
           .then(response => {
             this.userInfo = response.data.data
-            sessionStorage.setItem('nickname', this.userInfo.nickname);
-            sessionStorage.setItem('token', this.userInfo.token);
+            // sessionStorage.setItem('nickname', this.userInfo.nickname);
+            // sessionStorage.setItem('token', this.userInfo.token);
 
             // this.$router.push({ path: '/life' });
 
@@ -85,7 +81,7 @@ export default {
 
 <style scoped>
 .login-page {
-  background-image: url("http://150.158.82.218/images/login.jpg");
+  background-image: url("http://www.life-moment.top/images/static/bk.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -103,5 +99,9 @@ export default {
 .login-btn {
   width: 100%;
   text-align: right;
+}
+
+::v-deep(.el-form-item__label) {
+  color: white;
 }
 </style>
