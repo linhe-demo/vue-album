@@ -9,10 +9,15 @@
           <el-form-item label="密&nbsp;&nbsp; 码：" label-width="80px">
             <el-input type="password" v-model="loginData.passWord"></el-input>
           </el-form-item>
+          <el-form-item v-show="registerStatus" label="昵&nbsp;&nbsp; 称：" label-width="80px">
+            <el-input v-model="loginData.nickname"></el-input>
+          </el-form-item>
           <el-form-item>
             <div class="login-btn">
-              <el-button type="primary" @click="login" class="btn">登录</el-button>
-              <el-button type="primary" @click="register" class="btn">注册</el-button>
+              <el-button v-show="registerStatus" type="primary" @click="backLogin" class="btn">返回登录页</el-button>
+              <el-button v-show="loginStatus" type="primary" @click="login" class="btn">登录</el-button>
+              <el-button v-show="loginStatus" type="primary" @click="register" class="btn">注册</el-button>
+              <el-button v-show="registerStatus" type="primary" @click="commit" class="btn">提交</el-button>
             </div>
           </el-form-item>
         </el-form>
@@ -47,11 +52,14 @@ export default {
       commonFunc: {},
       loginData: {
         userName: '',
-        passWord: ''
+        passWord: '',
+        nickname: ''
       },
       userInfo: [],
       currentYear: '',
-      route: {}
+      route: {},
+      registerStatus: false,
+      loginStatus: true
     };
   },
   mounted() {
@@ -61,6 +69,8 @@ export default {
   },
   methods: {
     login() {
+      this.loginStatus = true
+
       if (this.loginData.userName.length === 0) {
         alert("用户名不能为空");
         return
@@ -73,11 +83,11 @@ export default {
       axios.post(process.env.BASE_URL + '/api/v1/user/login', this.loginData)
           .then(res => {
             if (res.data.code === 200) {
-              this.store.commit("updateUserToken", res.data.data.token)
-              this.store.commit("updateUserNickname", res.data.data.nickname)
-              this.route.push({ path: '/life' });
+              this.store.commit("user/updateUserToken", res.data.data.token)
+              this.store.commit("user/updateUserNickname", res.data.data.nickname)
+              this.route.push({path: '/main'});
             } else {
-              this.route.push({ path: '/login' });
+              alert(res.data.message);
             }
           })
           .catch(error => {
@@ -85,8 +95,39 @@ export default {
           });
     },
     register() {
-      // 在这里编写登录逻辑，例如发送登录请求到服务器进行验证
-      // ...
+      this.registerStatus = true
+      this.loginStatus = false
+    },
+
+    commit() {
+      if (this.loginData.userName.length === 0) {
+        alert("用户名不能为空");
+        return
+      }
+      if (this.loginData.passWord.length === 0) {
+        alert("用户密码不能为空");
+        return
+      }
+      if (this.loginData.passWord.length === 0) {
+        alert("用户昵称不能为空");
+        return
+      }
+
+      axios.post(process.env.BASE_URL + '/api/v1/user/register', this.loginData)
+          .then(res => {
+            if (res.data.code === 200) {
+              this.route.push({path: '/'});
+            } else {
+              alert(res.data.message);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    },
+    backLogin() {
+      this.registerStatus = false
+      this.loginStatus = true
     }
   }
 };

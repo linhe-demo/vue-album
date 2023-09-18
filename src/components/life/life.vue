@@ -36,7 +36,7 @@
 </template>
 <script>
 import instance from "../../js/request";
-import {useStore} from 'vuex'
+import {useStore} from 'vuex';
 import axios from "axios";
 
 export default {
@@ -55,7 +55,6 @@ export default {
     }
   },
   mounted() {
-    this.store = useStore()
     this.currentYear = new Date().getFullYear()
     this.className = "lun-img-two";
     setTimeout(() => {
@@ -74,10 +73,12 @@ export default {
     showText(id) {
       this.textInfo = this.images[id].text
     },
+
     getConfig() {
+      let store = useStore()
       axios.post(process.env.BASE_URL + '/api/v1/life/moment', {"num": 8}, {
         headers: {
-          'Authorization': this.store.state.token
+          'Authorization': store.state.user.token
         }
       }).then(response => {
         this.images = response.data.data

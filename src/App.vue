@@ -6,6 +6,7 @@
 
 <script>
 import {useRouter} from "vue-router";
+import {useStore} from 'vuex'
 
 export default {
   name: 'App',
@@ -51,9 +52,13 @@ export default {
         }
       })
     } else {
-      router.replace({
-        path: '/'
-      })
+      //检查用户本地是否有登录token
+      let store = useStore()
+      if (store.state.user.token.length === 0) {
+        router.replace({
+          path: '/'
+        })
+      }
     }
   },
   methods: {
