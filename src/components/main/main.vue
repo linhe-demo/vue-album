@@ -21,6 +21,7 @@
 <script>
 import {useStore} from 'vuex';
 import axios from "axios";
+import {useRouter} from "vue-router";
 
 export default {
   name: "Index",
@@ -35,6 +36,7 @@ export default {
     this.currentYear = new Date().getFullYear()
     let store = useStore()
     this.customer = store.state.user.nickname
+    this.route = useRouter()
     this.getConfig()
   },
   methods: {

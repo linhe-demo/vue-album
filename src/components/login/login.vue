@@ -66,6 +66,7 @@ export default {
     this.currentYear = new Date().getFullYear()
     this.store = useStore()
     this.route = useRouter()
+    this.autoLogin()
   },
   methods: {
     login() {
@@ -88,6 +89,22 @@ export default {
               this.route.push({path: '/main'});
             } else {
               alert(res.data.message);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    },
+    autoLogin() {
+      let token = useStore().state.user.token
+      axios.post(process.env.BASE_URL + '/api/v1/auto/login', this.loginData, {
+        headers: {
+          'Authorization': token
+        }
+      })
+          .then(res => {
+            if (res.data.code === 200) {
+              this.route.push({path: '/main'});
             }
           })
           .catch(error => {
