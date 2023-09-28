@@ -7,9 +7,9 @@
     </div>
   </div>
 
-  <el-dialog v-model="dialogVisible" title="新增照片" width="80%" style="height: 80%">
+  <el-dialog v-model="dialogVisible" title="新增照片" width="80%">
     <div style="width: 100%;height: 100%">
-      <input id="upload_file" type="file" style="display: block;" accept='image/*' name="file"
+      <input id="upload_file" type="file" style="display: none;" accept='image/*' name="file"
              @change="fileChange($event)"/>
       <div class="image-item space" @click="showActionSheet()">
         <div class="image-up"></div>
@@ -19,12 +19,12 @@
         <div class="upload_warp_img">
           <div class="upload_warp_img_div" v-for="(item,index) in imgList">
             <div class="upload_warp_img_div_top">
-              <i class="el-icon-minus" @click="fileDel(index)"></i>
+              <span @click="fileDel(index)">—</span>
             </div>
-            <img :src="item.file.src" style="display: inline-block;">
+            <img :src="item.file.src" style="display: inline-block;width: 80px;height: 60px;">
           </div>
           <div class="upload_warp_left" id="upload_warp_left" @click="fileClick()" v-if="this.imgList.length < 6">
-            <i class="el-icon-plus"></i>
+            <i class="el-icon-plus"></i> +
           </div>
         </div>
 
@@ -46,6 +46,7 @@
 import {useStore} from 'vuex';
 import axios from "axios";
 import router from "../../router";
+import $ from 'jquery'
 
 export default {
   name: "Index",
@@ -59,7 +60,7 @@ export default {
       datas: new FormData(),
       files: 0,
       size: 0,
-      dialogVisible: true
+      dialogVisible: false
     }
   },
   mounted() {
@@ -262,6 +263,10 @@ export default {
   width: 100%;
   height: 80%;
 }
+.upload_warp{
+  width: 100%;
+  height: 100%;
+}
 
 .welcome {
   color: white;
@@ -286,6 +291,11 @@ export default {
 .upload_warp{
   width: 100%;
   height: 10%;
+}
+
+.upload_warp_left {
+  width: 50px;
+  height: 50px;
 }
 
 .title-desc {
@@ -317,6 +327,10 @@ export default {
 
 .time-line-content {
   height: 100%;
+}
+.upload_warp_img_div {
+  width: 100px;
+  height: 70px;
 }
 </style>
 
