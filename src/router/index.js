@@ -4,6 +4,7 @@ import Config from '../components/config/config.vue'
 import Login from '../components/login/login.vue'
 import Error from '../components/error/error.vue'
 import Main from '../components/main/main.vue'
+import Picture from '../components/picture/picture.vue'
 
 const routes = [
     {
@@ -30,6 +31,11 @@ const routes = [
         path: '/main',
         name: 'main',
         component: Main
+    },
+    {
+        path: '/picture',
+        name: 'picture',
+        component: Picture
     }
 ]
 

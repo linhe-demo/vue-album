@@ -8,8 +8,10 @@
     <div v-for="(item, index) in images" :key="index" class="time-line-item">
       <div class="time-line-content">
         <div class="main-box">
-          <div class="left"><div class="content">{{ item.date }}</div></div>
-          <div class="right">
+          <div class="left">
+            <div class="content">{{ item.date }}</div>
+          </div>
+          <div :class="item.theme" v-on:click="showPicture(item.id, item.title)">
             <p>{{ item.title }}</p>
             <p>{{ item.desc }}</p>
           </div>
@@ -21,15 +23,16 @@
 <script>
 import {useStore} from 'vuex';
 import axios from "axios";
-import {useRouter} from "vue-router";
-
+import {useRoute, useRouter} from "vue-router";
+import router from "../../router";
 export default {
   name: "Index",
   data() {
     return {
       customer: "",
       currentYear: "",
-      images: []
+      images: [],
+      route: {}
     }
   },
   mounted() {
@@ -58,6 +61,15 @@ export default {
           .catch(error => {
             console.log(error);
           });
+    },
+    showPicture(id, title) {
+      this.route.push({
+        name: 'picture',
+        query: {
+          id: id,
+          title: title
+        }
+      })
     }
   }
 }
@@ -89,7 +101,8 @@ export default {
   width: 40%;
   display: flex;
 }
-.content{
+
+.content {
   width: 80%;
   display: flex;
   margin-top: 5px;
@@ -105,16 +118,28 @@ export default {
 
 .right {
   width: 57%;
-  background: linear-gradient(#a8d0d4, white);
   border-radius: 5px;
   height: 80%;
   margin-top: 5px;
   padding-left: 10px;
   color: white;
   margin-right: 1px;
-
 }
-.title-desc{
+
+.theme-1 {
+  background: linear-gradient(#cfd9df, #a18cd1);
+}
+.theme-2 {
+  background: linear-gradient(#a18cd1, #fbc2eb);
+}
+.theme-3 {
+  background: linear-gradient(#fbc2eb, #a6c1ee);
+}
+.theme-0 {
+  background: linear-gradient(#a6c1ee, #cfd9df);
+}
+
+.title-desc {
   color: white;
   height: 56%;
   display: flex;
@@ -129,7 +154,7 @@ export default {
   height: 100%;
 }
 
-.text{
+.text {
   color: white;
   font-size: 12px;
   text-align: right;
