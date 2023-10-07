@@ -23,13 +23,12 @@ export default {
     },
   },
   mounted() {
-    this.total = this.images.length
     this.complete = 0
   },
   methods: {
     loadComplete() {
+      this.total = this.images.length
       this.complete += 1
-      console.log(this.complete, this.total)
       if (this.complete === this.total) {
         this.$emit('sendValue', 'ok')
       }
