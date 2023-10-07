@@ -19,19 +19,19 @@
         <div class="upload_warp_img">
           <div class="upload_warp_img_div" v-for="(item,index) in imgList">
             <div class="upload_warp_img_div_top">
-              <span @click="fileDel(index)">—</span>
+              <span @click="fileDel(index)" style="color: red; font-weight: bold;">x</span>
             </div>
             <img :src="item.file.src" style="display: inline-block;width: 80px;height: 60px;">
           </div>
           <div class="upload_warp_left" id="upload_warp_left" @click="fileClick()" v-if="this.imgList.length < 6">
-            <i class="el-icon-plus"></i> +
+            +
           </div>
         </div>
 
       </div>
 
       <div class="upload_warp_text">
-        <span>选中{{ imgList.length }}张文件，共{{ bytesToSize(this.size) }}</span>
+        <span>选中{{ imgList.length }}张图片，共{{ bytesToSize(this.size) }}</span>
       </div>
     </div>
     <template #footer>
@@ -294,8 +294,9 @@ export default {
 }
 
 .upload_warp_left {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+  font-size: 30px;
 }
 
 .title-desc {
@@ -307,6 +308,14 @@ export default {
   font-size: 16px;
   width: 100%;
   text-align: center;
+}
+.upload_warp_img_div_top {
+  height: 15px;
+  width: 15px;
+  border-radius: 15px;
+  border: 1px solid red;
+  text-align: center;
+  line-height: 13px;
 }
 
 .main-box {
@@ -330,7 +339,7 @@ export default {
 }
 .upload_warp_img_div {
   width: 100px;
-  height: 70px;
+  height: 80px;
 }
 </style>
 
