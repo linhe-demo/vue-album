@@ -24,7 +24,7 @@
         <div class="upload_warp_img">
           <div class="upload_warp_img_div" v-for="(item,index) in imgList">
             <div class="upload_warp_img_div_top">
-              <span @click="fileDel(index)" style="color: red; font-weight: bold;">x</span>
+              <span @click="fileDel(index)" style="color: red;font-size: 15px;">x</span>
             </div>
             <img :src="item.file.src" style="display: inline-block;width: 80px;height: 60px;">
           </div>
@@ -97,6 +97,10 @@ export default {
       }).then(response => {
         if (response.data.code === 200) {
           const data = response.data.data
+          if (data.length === 0) {
+            this.loadPicture = false
+            return
+          }
           for (let i = 0; i < data.length; i++) {
             this.arr.push(data[i].imgUrl)
           }
@@ -338,6 +342,7 @@ export default {
   border: 1px solid red;
   text-align: center;
   line-height: 13px;
+  margin-bottom: 2px;
 }
 
 
