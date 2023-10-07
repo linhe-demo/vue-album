@@ -6,7 +6,12 @@
       <el-button type="success" @click="add" style="margin-right:20px;" class="btn">新增</el-button>
     </div>
   </div>
-
+  <div class="detail" v-loading.fullscreen="loadPicture" :element-loading-text="loading">
+    <div class="photoBox">
+      <ImageRow
+          :images="arr" @sendValue="handleChildValue" />
+    </div>
+  </div>
   <el-dialog v-model="dialogVisible" title="新增照片" width="80%">
     <div style="width: 100%;height: 100%">
       <input id="upload_file" type="file" style="display: none;" accept='image/*' name="file"
@@ -47,42 +52,54 @@ import {useStore} from 'vuex';
 import axios from "axios";
 import router from "../../router";
 import $ from 'jquery'
+import ImageRow from "/src/components/picture/imageRow.vue";
 
 export default {
   name: "Index",
+  components: {
+    ImageRow,
+  },
   data() {
     return {
       id: 0,
       customer: "",
       title: '',
-      picturesList: [],
       imgList: [],
       datas: new FormData(),
+      loading: "数据加载中请稍后!",
+      images: [],
       files: 0,
       size: 0,
-      dialogVisible: false
+      dialogVisible: false,
+      loadPicture: false,
+      arr: [],
+      lineNum: 3,
+      spacingNumber: 5 //行间距单位px
     }
   },
   mounted() {
     this.currentYear = new Date().getFullYear()
     let store = useStore()
     this.customer = store.state.user.nickname
-
     const route = this.$route.query
     this.id = route.id
     this.title = route.title
+    this.getDetail()
   },
   methods: {
-    getConfig() {
+    getDetail() {
+      this.loadPicture = true
       let store = useStore()
-      axios.post(process.env.BASE_URL + '/api/v1/picture/list', {id: this.id}, {
+      axios.post(process.env.BASE_URL + '/api/v1/life/moment', {id: this.id}, {
         headers: {
           'Authorization': store.state.user.token
         }
       }).then(response => {
         if (response.data.code === 200) {
-          this.images = response.data.data
-
+          const data = response.data.data
+          for (let i = 0; i < data.length; i++) {
+            this.arr.push(data[i].imgUrl)
+          }
         } else {
           alert(response.data.message);
           this.route.replace({path: '/'});
@@ -91,6 +108,9 @@ export default {
           .catch(error => {
             console.log(error);
           });
+    },
+    handleChildValue (value) {
+      this.loadPicture = false;
     },
     back() {
       router.push({
@@ -263,7 +283,8 @@ export default {
   width: 100%;
   height: 80%;
 }
-.upload_warp{
+
+.upload_warp {
   width: 100%;
   height: 100%;
 }
@@ -288,7 +309,7 @@ export default {
 
 }
 
-.upload_warp{
+.upload_warp {
   width: 100%;
   height: 10%;
 }
@@ -309,6 +330,7 @@ export default {
   width: 100%;
   text-align: center;
 }
+
 .upload_warp_img_div_top {
   height: 15px;
   width: 15px;
@@ -318,10 +340,6 @@ export default {
   line-height: 13px;
 }
 
-.main-box {
-  display: flex;
-  height: 100%;
-}
 
 .text {
   color: white;
@@ -334,9 +352,6 @@ export default {
   height: 150px;
 }
 
-.time-line-content {
-  height: 100%;
-}
 .upload_warp_img_div {
   width: 100px;
   height: 80px;
