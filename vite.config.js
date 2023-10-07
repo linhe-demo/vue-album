@@ -27,8 +27,20 @@ export default defineConfig({
         'process.env': {
             "MUSIC_URL": "http://www.life-moment.top/music",
             "RESOURCE_URL": "http://www.life-moment.top/images/static",
-            'BASE_URL': 'http://127.0.0.1:8806'
+            'BASE_URL': 'http://life-moment.top:8806'
             // 'REQUEST_URL': 'http://127.0.0.1:8806'
         }
-    }
+    },
+    build: {
+        chunkSizeWarningLimit: 1500,
+        rollupOptions: {
+            output: {// 分包
+                manualChunks(id) {
+                    if (id.includes("node_modules")) {
+                        return id.toString().split("node_modules/")[1].split("/")[0].toString();
+                    }
+                },
+            },
+        },
+    },
 })
