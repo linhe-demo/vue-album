@@ -283,9 +283,10 @@ export default {
   background-color: #181818;
 }
 
-.time-line {
+.detail {
   width: 100%;
-  height: 80%;
+  height: 92%;
+  overflow-y: auto;
 }
 
 .upload_warp {
@@ -299,18 +300,6 @@ export default {
   padding-top: 10px;
   display: inline-flex;
   width: 100%;
-}
-
-.right {
-  width: 57%;
-  background: linear-gradient(#a8d0d4, white);
-  border-radius: 5px;
-  height: 80%;
-  margin-top: 5px;
-  padding-left: 10px;
-  color: white;
-  margin-right: 1px;
-
 }
 
 .upload_warp {
@@ -343,18 +332,6 @@ export default {
   text-align: center;
   line-height: 13px;
   margin-bottom: 2px;
-}
-
-
-.text {
-  color: white;
-  font-size: 12px;
-  text-align: right;
-  padding-right: 5px;
-}
-
-.time-line-item {
-  height: 150px;
 }
 
 .upload_warp_img_div {

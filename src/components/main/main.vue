@@ -89,6 +89,7 @@ export default {
 .time-line {
   width: 100%;
   height: 80%;
+  overflow-y: auto;
 }
 
 .welcome {
@@ -123,7 +124,7 @@ export default {
   margin-top: 5px;
   padding-left: 10px;
   color: white;
-  margin-right: 1px;
+  margin-right: 10px;
 }
 
 .theme-1 {
