@@ -6,11 +6,13 @@
 
     <div v-if="$data.isModalOpen" class="modal">
       <div class="modal-content">
-        <el-button @click="closeModal" type="info" circle>X</el-button>
+        <div @click="closeModal" class="close-img">X</div>
         <div class="big-img">
           <el-carousel :autoplay="false" style="height: 100%;" arrow="hover">
             <el-carousel-item v-for="(image, index) in bigImages" :key="index">
-              <img :src="image"  alt="Image" style="width: 100%;height: auto;" />
+              <div class="big-img-box">
+                <img :src="image"  alt="Image" style="width: 100%;height: auto;" />
+              </div>
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -104,19 +106,32 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
+.close-img {
+  background-color: #878282;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 30px;
+  color: white;
+}
+
 .modal-content {
   background-color: #101010;
   padding: 20px;
   border-radius: 10px;
   width: 84%;
-  height: 76%;
+  height: 78%;
 }
 .big-img {
   width: 100%;
   height: 100%;
   opacity: 1;
 }
-
+.big-img-box {
+  border-radius: 5px;
+}
 .carousel-slider img {
   width: 100%;
   height: auto;

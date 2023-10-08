@@ -9,7 +9,7 @@
   <div class="detail" v-loading.fullscreen="loadPicture" :element-loading-text="loading">
     <div class="photoBox">
       <ImageRow
-          :images="arr" @sendValue="handleChildValue" />
+          :images="arr" @sendValue="handleChildValue"/>
     </div>
   </div>
   <el-dialog v-model="dialogVisible" title="新增照片" width="80%">
@@ -113,7 +113,7 @@ export default {
             console.log(error);
           });
     },
-    handleChildValue (value) {
+    handleChildValue(value) {
       this.loadPicture = false;
     },
     back() {
@@ -144,13 +144,25 @@ export default {
     },
     //从相册选择照片
     galleryImgs() {
-      plus.gallery.pick(function (e) {
-        let name = e.substr(e.lastIndexOf('/') + 1);
-        compressImage(e, name);
-      }, function (e) {
-      }, {
-        filter: "image"
-      });
+      const options = {
+        success: (results) => {
+          // 处理选择结果，results 包含选中的图片信息
+          console.log(results);
+        },
+        fail: (error) => {
+          // 处理选择失败的情况
+          console.log(error);
+        },
+        multiple: true // 允许选择多张图片
+      };
+      plus.gallery.pick(options);
+      // plus.gallery.pick(function (e) {
+      //   let name = e.substr(e.lastIndexOf('/') + 1);
+      //   compressImage(e, name);
+      // }, function (e) {
+      // }, {
+      //   filter: "image"
+      // });
     },
     //点击事件，弹出选择摄像头和相册的选项
     showActionSheet() {
