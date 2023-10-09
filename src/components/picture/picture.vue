@@ -12,46 +12,45 @@
           :images="arr" @sendValue="handleChildValue"/>
     </div>
   </div>
+
   <el-dialog v-model="dialogVisible" title="新增照片" width="80%">
-    <div style="width: 100%;height: 100%">
-      <input id="upload_file" type="file" style="display: none;" accept='image/*' name="file"
-             @change="fileChange($event)"/>
-      <div class="image-item space" @click="showActionSheet()">
-        <div class="image-up"></div>
-      </div>
+    <div>
+      <el-form>
+        <el-form-item>
+          <el-upload
+              ref="upload"
+              accept='image/jpeg,image/gif,image/png'
+              action="#"
+              multiple
+              list-type="picture-card"
+              :on-change="handleChange"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :auto-upload="false"
+              :file-list="fileList"
+              :limit="20"
+          >+
+          </el-upload>
+          <el-dialog title="图片预览" :visible.sync="diaPreviewVisible">
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+        </el-form-item>
+        <el-form-item>
 
-      <div class="upload_warp">
-        <div class="upload_warp_img">
-          <div class="upload_warp_img_div" v-for="(item,index) in imgList">
-            <div class="upload_warp_img_div_top">
-              <span @click="fileDel(index)" style="color: red;font-size: 15px;">x</span>
-            </div>
-            <img :src="item.file.src" style="display: inline-block;width: 80px;height: 60px;">
-          </div>
-          <div class="upload_warp_left" id="upload_warp_left" @click="fileClick()" v-if="this.imgList.length < 6">
-            +
-          </div>
-        </div>
-
-      </div>
-
-      <div class="upload_warp_text">
-        <span>选中{{ imgList.length }}张图片，共{{ bytesToSize(this.size) }}</span>
-      </div>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="default" @click="cancelUpload">取消</el-button>
+          <el-button type="primary" @click="handlePush">上传</el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <template #footer>
-                <span class="dialog-footer">
-                    <el-button @click="dialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="dialogVisible = false">保 存</el-button>
-                </span>
-    </template>
   </el-dialog>
+
 </template>
 <script>
 import {useStore} from 'vuex';
 import axios from "axios";
 import router from "../../router";
-import $ from 'jquery'
 import ImageRow from "/src/components/picture/imageRow.vue";
 
 export default {
@@ -65,16 +64,17 @@ export default {
       customer: "",
       title: '',
       imgList: [],
-      datas: new FormData(),
       loading: "数据加载中请稍后!",
-      images: [],
-      files: 0,
-      size: 0,
       dialogVisible: false,
       loadPicture: false,
       arr: [],
       lineNum: 3,
-      spacingNumber: 5 //行间距单位px
+      spacingNumber: 5, //行间距单位px
+      token: '',
+      fileList: [],
+      diaPreviewVisible: false,
+      //图片预览地址
+      dialogImageUrl: "",
     }
   },
   mounted() {
@@ -87,9 +87,45 @@ export default {
     this.getDetail()
   },
   methods: {
+    handleChange(file, fileList) {
+      this.fileList = fileList;
+    },
+    async handlePush() {
+      let fd = new FormData();
+      this.fileList.forEach(item => {
+        //文件信息中raw才是真的文件
+        fd.append("files", item.raw);
+      })
+      fd.append("id", this.id);
+      await axios.post(process.env.BASE_URL + '/api/v1/image/upload', fd, {
+        headers: {'Content-Type': 'multipart/form-data', 'Authorization': this.token},
+      }).then(response => {
+        if (response.data.code === 200) {
+          this.$router.go(0)
+        } else {
+          alert(response.data.message);
+          this.route.replace({path: '/'});
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    handlePreview(file) {
+      this.dialogImageUrl = file.url
+      this.diaPreviewVisible = true
+    },
+    handleRemove(file, fileList) {
+      this.fileList = fileList
+      this.$message({
+        type: 'info',
+        message: '已删除原有图片',
+        duration: 1000
+      });
+    },
     getDetail() {
       this.loadPicture = true
       let store = useStore()
+      this.token = store.state.user.token
       axios.post(process.env.BASE_URL + '/api/v1/life/moment', {id: this.id}, {
         headers: {
           'Authorization': store.state.user.token
@@ -116,6 +152,10 @@ export default {
     handleChildValue(value) {
       this.loadPicture = false;
     },
+    cancelUpload() {
+      this.fileList = []
+      this.dialogVisible = false
+    },
     back() {
       router.push({
         name: 'main'
@@ -124,163 +164,7 @@ export default {
     add() {
       this.dialogVisible = true
       console.log(this.dialogVisible)
-    },
-    fileClick() {
-      $('#upload_file').click();
-    },
-    //调用手机摄像头并拍照
-    getImage() {
-      let cmr = plus.camera.getCamera();
-      cmr.captureImage(function (p) {
-        plus.io.resolveLocalFileSystemURL(p, function (entry) {
-          compressImage(entry.toLocalURL(), entry.name);
-        }, function (e) {
-          plus.nativeUI.toast("读取拍照文件错误：" + e.message);
-        });
-      }, function (e) {
-      }, {
-        filter: 'image'
-      });
-    },
-    //从相册选择照片
-    galleryImgs() {
-      const options = {
-        success: (results) => {
-          // 处理选择结果，results 包含选中的图片信息
-          console.log(results);
-        },
-        fail: (error) => {
-          // 处理选择失败的情况
-          console.log(error);
-        },
-        multiple: true // 允许选择多张图片
-      };
-      plus.gallery.pick(options);
-      // plus.gallery.pick(function (e) {
-      //   let name = e.substr(e.lastIndexOf('/') + 1);
-      //   compressImage(e, name);
-      // }, function (e) {
-      // }, {
-      //   filter: "image"
-      // });
-    },
-    //点击事件，弹出选择摄像头和相册的选项
-    showActionSheet() {
-      let bts = [{
-        title: "拍照"
-      }, {
-        title: "从相册选择"
-      }];
-      plus.nativeUI.actionSheet({
-            cancel: "取消",
-            buttons: bts
-          },
-          function (e) {
-            if (e.index === 1) {
-              this.getImage();
-            } else if (e.index === 2) {
-              this.galleryImgs();
-            }
-          }
-      );
-    },
-    fileChange(el) {
-      this.files = $("#upload_file").get(0).files;
-      console.log(this.files.length);
-      for (let i = 0; i < this.files.length; i++) {
-        this.datas.append("file", this.files[i]);
-      }
-      this.show1 = false;
-      console.log(typeof this.files);
-      console.log(this.files);
-      if (!el.target.files[0].size) return;
-      this.fileList(el.target);
-      el.target.value = ''
-    },
-    fileList(fileList) {
-      let files = fileList.files;
-      for (let i = 0; i < files.length; i++) {
-        //判断是否为文件夹
-        if (files[i].type !== '') {
-          this.fileAdd(files[i]);
-        } else {
-          //文件夹处理
-          this.folders(fileList.items[i]);
-        }
-      }
-    },
-    //文件夹处理
-    folders(files) {
-      let _this = this;
-      //判断是否为原生file
-      if (files.kind) {
-        files = files.webkitGetAsEntry();
-      }
-      files.createReader().readEntries(function (file) {
-        for (let i = 0; i < file.length; i++) {
-          if (file[i].isFile) {
-            _this.foldersAdd(file[i]);
-          } else {
-            _this.folders(file[i]);
-          }
-        }
-      })
-    },
-    fileAdd(file) {
-      //总大小
-      this.size = this.size + file.size;
-      //判断是否为图片文件
-      if (file.type.indexOf('image') === -1) {
-        file.src = 'wenjian.png';
-        this.imgList.push({
-          file
-        });
-      } else {
-        let reader = new FileReader();
-        reader.vue = this;
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-          file.src = this.result;
-          this.vue.imgList.push({
-            file
-          });
-        }
-      }
-    },
-    fileDel(index) {
-      this.size = this.size - this.imgList[index].file.size;//总大小
-      this.imgList.splice(index, 1);
-    },
-    bytesToSize(bytes) {
-      if (bytes === 0) {
-        return '0 B';
-      }
-      let k = 1000, // or 1024
-          sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
-          i = Math.floor(Math.log(bytes) / Math.log(k));
-      return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
-    },
-    dragenter(el) {
-      el.stopPropagation();
-      el.preventDefault();
-    },
-    dragover(el) {
-      el.stopPropagation();
-      el.preventDefault();
-    },
-    drop(el) {
-      el.stopPropagation();
-      el.preventDefault();
-      this.fileList(el.dataTransfer);
-    },
-    shows(et, tx) {
-      this.strut = et;
-      this.txt = tx;
-    },
-    handleClick() {
-      this.$store.commit('add')
-    },
-
+    }
   }
 }
 </script>
@@ -301,28 +185,12 @@ export default {
   overflow-y: auto;
 }
 
-.upload_warp {
-  width: 100%;
-  height: 100%;
-}
-
 .welcome {
   color: white;
   padding-left: 10px;
   padding-top: 10px;
   display: inline-flex;
   width: 100%;
-}
-
-.upload_warp {
-  width: 100%;
-  height: 10%;
-}
-
-.upload_warp_left {
-  width: 40px;
-  height: 40px;
-  font-size: 30px;
 }
 
 .title-desc {
@@ -336,19 +204,16 @@ export default {
   text-align: center;
 }
 
-.upload_warp_img_div_top {
-  height: 15px;
-  width: 15px;
-  border-radius: 15px;
-  border: 1px solid red;
-  text-align: center;
-  line-height: 13px;
-  margin-bottom: 2px;
+::v-deep(.el-upload--picture-card) {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
 }
 
-.upload_warp_img_div {
-  width: 100px;
-  height: 80px;
+::v-deep(.el-upload-list__item) {
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
 }
 </style>
 
