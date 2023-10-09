@@ -91,6 +91,8 @@ export default {
       this.fileList = fileList;
     },
     async handlePush() {
+      this.loading = "数据上传中，请稍后"
+      this.loadPicture = true
       let fd = new FormData();
       this.fileList.forEach(item => {
         //文件信息中raw才是真的文件
@@ -101,6 +103,7 @@ export default {
         headers: {'Content-Type': 'multipart/form-data', 'Authorization': this.token},
       }).then(response => {
         if (response.data.code === 200) {
+          this.loadPicture = false
           this.$router.go(0)
         } else {
           alert(response.data.message);
