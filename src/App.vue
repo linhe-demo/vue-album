@@ -18,8 +18,8 @@ export default {
       }
     }, {passive: false});
     /*禁止ios缩放，双击和双指*/
-    window.onload = function() {
-      document.addEventListener("touchstart", function(event) {
+    window.onload = function () {
+      document.addEventListener("touchstart", function (event) {
         if (event.touches.length > 1) {
           event.preventDefault();
         }
@@ -27,7 +27,7 @@ export default {
       var lastTouchEnd = 0;
       document.addEventListener(
           "touchend",
-          function(event) {
+          function (event) {
             var now = new Date().getTime();
             if (now - lastTouchEnd <= 300) {
               event.preventDefault();
@@ -36,7 +36,7 @@ export default {
           },
           false
       );
-      document.addEventListener("gesturestart", function(event) {
+      document.addEventListener("gesturestart", function (event) {
         event.preventDefault();
       });
     };

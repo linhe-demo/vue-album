@@ -23,10 +23,35 @@
     </div>
   </div>
   <div class="foot">
-    <div class="box"><el-button type="primary" circle><span style="font-size: 10px;">足迹</span></el-button></div>
-    <div class="box"><el-button circle><span style="font-size: 10px;">心情</span></el-button></div>
-    <div class="box"><el-button circle><span style="font-size: 10px;">财富</span></el-button></div>
+    <div class="box">
+      <el-button type="primary" circle><span style="font-size: 10px;" @click="footprints">足迹</span></el-button>
+    </div>
+    <div class="box">
+      <el-button circle><span style="font-size: 10px;">心情</span></el-button>
+    </div>
+    <div class="box">
+      <el-button circle><span style="font-size: 10px;">财富</span></el-button>
+    </div>
   </div>
+  <el-dialog v-model="dialogVisible" title="新增相册" width="80%">
+    <div>
+      <el-form>
+        <el-form-item label="相册名称">
+          <el-input v-model="albumForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="相册描述">
+          <el-input v-model="albumForm.desc"></el-input>
+        </el-form-item>
+        <el-form-item label="相册时间">
+          <el-date-picker type="date" placeholder="选择日期" v-model="albumForm.date" style="width: 100%;"></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="default" @click="cancelSave">取消</el-button>
+          <el-button type="primary" @click="saveAlbum">上传</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </el-dialog>
 </template>
 <script>
 import {useStore} from 'vuex';
@@ -41,13 +66,21 @@ export default {
       customer: "",
       currentYear: "",
       images: [],
-      route: {}
+      route: {},
+      token: "",
+      dialogVisible: false,
+      albumForm: {
+        name: "",
+        desc: "",
+        date: ""
+      }
     }
   },
   mounted() {
     this.currentYear = new Date().getFullYear()
     let store = useStore()
     this.customer = store.state.user.nickname
+    this.token = store.state.user.token
     this.route = useRouter()
     this.getConfig()
   },
@@ -61,15 +94,13 @@ export default {
       }).then(response => {
         if (response.data.code === 200) {
           this.images = response.data.data
-
         } else {
           alert(response.data.message);
           this.route.replace({path: '/'});
         }
-      })
-          .catch(error => {
-            console.log(error);
-          });
+      }).catch(error => {
+        console.log(error);
+      });
     },
     showPicture(id, title) {
       this.route.replace({
@@ -78,6 +109,49 @@ export default {
           id: id,
           title: title
         }
+      })
+    },
+    cancelSave() {
+      this.dialogVisible = false;
+      this.albumForm.name = ""
+      this.albumForm.desc = ""
+      this.albumForm.date = ""
+    },
+    saveAlbum() {
+      if (this.albumForm.name.length === 0) {
+        alert("请填写相册名");
+        return
+      }
+      if (this.albumForm.desc.length === 0) {
+        alert("请填写相册描述");
+        return
+      }
+      if (this.albumForm.date.length === 0){
+        alert("请选择相册时间");
+        return
+      }
+      axios.post(process.env.BASE_URL + '/api/v1/album/add', this.albumForm, {
+        headers: {
+          'Authorization': this.token
+        }
+      }).then(response => {
+        if (response.data.code === 200) {
+          this.$router.go(0)
+          this.dialogVisible = false;
+        } else {
+          alert(response.data.message);
+          this.route.replace({path: '/'});
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+    addAlbum() {
+      this.dialogVisible = true
+    },
+    footprints() {
+      router.replace({
+        path: '/main'
       })
     }
   }
