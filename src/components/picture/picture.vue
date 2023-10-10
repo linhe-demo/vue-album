@@ -160,8 +160,8 @@ export default {
       this.dialogVisible = false
     },
     back() {
-      router.push({
-        name: 'main'
+      router.replace({
+        path: '/main'
       })
     },
     add() {

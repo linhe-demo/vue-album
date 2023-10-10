@@ -1,6 +1,9 @@
 <template>
   <div class="title">
-    <div class="welcome">欢迎 {{ customer }} 来小屋 ^_^</div>
+    <div class="welcome">
+      欢迎 {{ customer }} 来小屋 ^_^
+      <el-button type="primary" @click="addAlbum" class="add-album">新增</el-button>
+    </div>
     <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
@@ -19,12 +22,18 @@
       </div>
     </div>
   </div>
+  <div class="foot">
+    <div class="box"><el-button type="primary" circle><span style="font-size: 10px;">足迹</span></el-button></div>
+    <div class="box"><el-button circle><span style="font-size: 10px;">心情</span></el-button></div>
+    <div class="box"><el-button circle><span style="font-size: 10px;">财富</span></el-button></div>
+  </div>
 </template>
 <script>
 import {useStore} from 'vuex';
 import axios from "axios";
 import {useRoute, useRouter} from "vue-router";
 import router from "../../router";
+
 export default {
   name: "Index",
   data() {
@@ -63,8 +72,8 @@ export default {
           });
     },
     showPicture(id, title) {
-      this.route.push({
-        name: 'picture',
+      this.route.replace({
+        path: '/picture',
         query: {
           id: id,
           title: title
@@ -86,10 +95,30 @@ export default {
   background-size: cover;
 }
 
+.foot {
+  width: 100%;
+  height: 8%;
+  display: inline-flex;
+}
+
+.box {
+  width: 33.3%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
 .time-line {
   width: 100%;
-  height: 80%;
+  height: 72%;
   overflow-y: auto;
+}
+
+.add-album {
+  float: right;
+  margin-right: 10px;
 }
 
 .welcome {
@@ -130,12 +159,15 @@ export default {
 .theme-1 {
   background: linear-gradient(#cfd9df, #a18cd1);
 }
+
 .theme-2 {
   background: linear-gradient(#a18cd1, #fbc2eb);
 }
+
 .theme-3 {
   background: linear-gradient(#fbc2eb, #a6c1ee);
 }
+
 .theme-0 {
   background: linear-gradient(#a6c1ee, #cfd9df);
 }

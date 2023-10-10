@@ -86,7 +86,7 @@ export default {
             if (res.data.code === 200) {
               this.store.commit("user/updateUserToken", res.data.data.token)
               this.store.commit("user/updateUserNickname", res.data.data.nickname)
-              this.route.push({path: '/main'});
+              this.route.replace({path: '/main'});
             } else {
               alert(res.data.message);
             }
@@ -104,7 +104,7 @@ export default {
       })
           .then(res => {
             if (res.data.code === 200) {
-              this.route.push({path: '/main'});
+              this.route.replace({path: '/main'});
             }
           })
           .catch(error => {

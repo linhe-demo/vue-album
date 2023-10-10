@@ -45,7 +45,7 @@ export default {
     const router = useRouter()
     // 根据不同路由跳转不同页面
     if (!this._isMobile()) {
-      router.push({
+      router.replace({
         path: '/error',
         query: {
           info: "本站为手机端网站，请使用手机浏览"
