@@ -24,13 +24,13 @@
   </div>
   <div class="foot">
     <div class="box">
-      <el-button type="primary" circle><span style="font-size: 10px;" @click="footprints">足迹</span></el-button>
+      <el-button type="primary" circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 10px;">心情</span></el-button>
+      <el-button circle><span style="font-size: 12px;">心情</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 10px;">财富</span></el-button>
+      <el-button circle><span style="font-size: 12px;">财富</span></el-button>
     </div>
   </div>
   <el-dialog v-model="dialogVisible" title="新增相册" width="80%">
@@ -178,7 +178,7 @@ export default {
 
 .foot {
   width: 100%;
-  height: 10%;
+  height: 12%;
   display: inline-flex;
 }
 
@@ -193,7 +193,7 @@ export default {
 
 .time-line {
   width: 100%;
-  height: 70%;
+  height: 68%;
   overflow-y: auto;
 }
 
