@@ -1,7 +1,7 @@
 <template>
   <div class="image-grid">
     <div class="grid-item" v-for="(image, index) in images" :key="index" @click="showModal(index)">
-      <img :src="image" @load="loadComplete" alt="Image" style="width: 100%;height: 150px;" />
+      <img :src="image.src" @load="loadComplete" :class="{ 'portrait-image': shouldAddClass(image) }" alt="Image" style="width: 100%;height: 100%;object-fit: cover;" />
     </div>
 
     <div v-if="$data.isModalOpen" class="modal">
@@ -11,7 +11,7 @@
           <el-carousel :autoplay="false" style="height: 100%;" arrow="hover">
             <el-carousel-item v-for="(image, index) in bigImages" :key="index">
               <div class="big-img-box">
-                <img :src="image"  alt="Image" style="width: 100%;height: auto;" />
+                <img :src="image.src" :class="{ 'portrait-image': shouldAddClass(image) }"  alt="Image" style="width: 100%;height: 100%;object-fit: cover;" />
               </div>
             </el-carousel-item>
           </el-carousel>
@@ -67,6 +67,13 @@ export default {
       imgList.unshift(this.images[index])
       this.bigImages = imgList
     },
+    shouldAddClass(item){
+      if (item.horizontal === 1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     closeModal() {
       this.isModalOpen = false;
     }
@@ -87,6 +94,11 @@ export default {
   height: 160px;
   object-fit: cover;
   border-radius: 5px;
+  overflow: hidden;
+}
+
+.portrait-image {
+  transform: rotate(90deg); /* 旋转图片90度 */
 }
 
 .carousel img {
@@ -126,11 +138,15 @@ export default {
 }
 .big-img {
   width: 100%;
-  height: 100%;
+  height: 90%;
   opacity: 1;
 }
 .big-img-box {
   border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  overflow: hidden;
 }
 .carousel-slider img {
   width: 100%;

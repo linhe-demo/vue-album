@@ -141,7 +141,7 @@ export default {
             return
           }
           for (let i = 0; i < data.length; i++) {
-            this.arr.push(data[i].imgUrl)
+            this.arr.push({'src': data[i].imgUrl, 'horizontal': data[i].horizontalVersion})
           }
         } else {
           alert(response.data.message);

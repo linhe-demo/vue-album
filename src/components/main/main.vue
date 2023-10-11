@@ -7,7 +7,7 @@
     <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
-  <div class="time-line">
+  <div class="time-line" v-loading.fullscreen="loadAlbum" :element-loading-text="loading">
     <div v-for="(item, index) in images" :key="index" class="time-line-item">
       <div class="time-line-content">
         <div class="main-box">
@@ -47,7 +47,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="default" @click="cancelSave">取消</el-button>
-          <el-button type="primary" @click="saveAlbum">上传</el-button>
+          <el-button type="primary" @click="saveAlbum">保存</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -73,7 +73,9 @@ export default {
         name: "",
         desc: "",
         date: ""
-      }
+      },
+      loadAlbum: false,
+      loading: "相册数据加载中，请稍后！"
     }
   },
   mounted() {
@@ -86,6 +88,7 @@ export default {
   },
   methods: {
     getConfig() {
+      this.loadAlbum = true
       let store = useStore()
       axios.post(process.env.BASE_URL + '/api/v1/album/list', {}, {
         headers: {
@@ -98,6 +101,7 @@ export default {
           alert(response.data.message);
           this.route.replace({path: '/'});
         }
+        this.loadAlbum = false
       }).catch(error => {
         console.log(error);
       });
@@ -130,6 +134,8 @@ export default {
         alert("请选择相册时间");
         return
       }
+      this.loadAlbum = true
+      this.loading = "相册数据保存中，请稍等..."
       axios.post(process.env.BASE_URL + '/api/v1/album/add', this.albumForm, {
         headers: {
           'Authorization': this.token
@@ -142,6 +148,7 @@ export default {
           alert(response.data.message);
           this.route.replace({path: '/'});
         }
+        this.loadAlbum = false
       }).catch(error => {
         console.log(error);
       });
@@ -171,7 +178,7 @@ export default {
 
 .foot {
   width: 100%;
-  height: 8%;
+  height: 10%;
   display: inline-flex;
 }
 
@@ -186,7 +193,7 @@ export default {
 
 .time-line {
   width: 100%;
-  height: 72%;
+  height: 70%;
   overflow-y: auto;
 }
 
