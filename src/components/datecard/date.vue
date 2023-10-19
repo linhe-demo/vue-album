@@ -141,6 +141,8 @@ export default {
   width: 84%;
   line-height: 40px;
   text-align: center;
+  font-weight: bold;
+  color: #ababab;
 }
 
 .welcome {
