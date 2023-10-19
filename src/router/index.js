@@ -5,6 +5,7 @@ import Login from '../components/login/login.vue'
 import Error from '../components/error/error.vue'
 import Main from '../components/main/main.vue'
 import Picture from '../components/picture/picture.vue'
+import Date from '../components/datecard/date.vue'
 
 const routes = [
     {
@@ -36,6 +37,11 @@ const routes = [
         path: '/picture',
         name: 'picture',
         component: Picture
+    },
+    {
+        path: '/date',
+        name: 'date',
+        component: Date
     }
 ]
 

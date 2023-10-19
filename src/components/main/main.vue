@@ -1,11 +1,10 @@
 <template>
   <div class="title">
     <div class="welcome">
-      欢迎 {{ customer }} 来小屋 ^_^
-      <el-button type="primary" @click="addAlbum" class="add-album">新增</el-button>
+      <el-button type="primary" @click="back" class="btn">返回</el-button>
+      <div class="title-desc">{{ date }}</div>
+      <el-button type="success" @click="addAlbum" style="margin-right:20px;" class="btn">新增</el-button>
     </div>
-    <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
-    <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
   <div class="time-line" v-loading.fullscreen="loadAlbum" :element-loading-text="loading">
     <div v-for="(item, index) in images" :key="index" class="time-line-item">
@@ -22,17 +21,7 @@
       </div>
     </div>
   </div>
-  <div class="foot">
-    <div class="box">
-      <el-button type="primary" circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
-    </div>
-    <div class="box">
-      <el-button circle><span style="font-size: 12px;">心情</span></el-button>
-    </div>
-    <div class="box">
-      <el-button circle><span style="font-size: 12px;">财富</span></el-button>
-    </div>
-  </div>
+
   <el-dialog v-model="dialogVisible" title="新增相册" width="80%">
     <div>
       <el-form>
@@ -74,6 +63,7 @@ export default {
         desc: "",
         date: ""
       },
+      date: "",
       loadAlbum: false,
       loading: "相册数据加载中，请稍后！"
     }
@@ -84,13 +74,15 @@ export default {
     this.customer = store.state.user.nickname
     this.token = store.state.user.token
     this.route = useRouter()
+    const route = this.$route.query
+    this.date = route.date
     this.getConfig()
   },
   methods: {
     getConfig() {
       this.loadAlbum = true
       let store = useStore()
-      axios.post(process.env.BASE_URL + '/api/v1/album/list', {}, {
+      axios.post(process.env.BASE_URL + '/api/v1/album/list', {date: this.date}, {
         headers: {
           'Authorization': store.state.user.token
         }
@@ -111,7 +103,8 @@ export default {
         path: '/picture',
         query: {
           id: id,
-          title: title
+          title: title,
+          date: this.date
         }
       })
     },
@@ -158,9 +151,14 @@ export default {
     },
     footprints() {
       router.replace({
-        path: '/main'
+        path: '/date'
       })
-    }
+    },
+    back() {
+      router.replace({
+        path: '/date'
+      })
+    },
   }
 }
 </script>
@@ -168,33 +166,28 @@ export default {
 
 .title {
   width: 100%;
-  height: 20%;
+  height: 8%;
   vertical-align: middle;
   border-radius: 5px;
   margin: 1px;
-  background: transparent url("http://www.life-moment.top/images/static/flower.jpg");
-  background-size: cover;
-}
-
-.foot {
-  width: 100%;
-  height: 12%;
-  display: inline-flex;
-}
-
-.box {
-  width: 33.3%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9f9f9;
+  background-color: #181818;
 }
 
 .time-line {
   width: 100%;
-  height: 68%;
+  height: 90%;
   overflow-y: auto;
+}
+
+.title-desc {
+  color: white;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  font-weight: bold;
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
 }
 
 .add-album {
@@ -206,6 +199,8 @@ export default {
   color: white;
   padding-left: 10px;
   padding-top: 10px;
+  display: inline-flex;
+  width: 100%;
 }
 
 .left {
@@ -255,12 +250,11 @@ export default {
 
 .title-desc {
   color: white;
-  height: 56%;
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
   font-weight: bold;
-  font-size: 29px;
+  font-size: 20px;
 }
 
 .main-box {

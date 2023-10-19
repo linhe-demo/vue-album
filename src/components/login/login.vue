@@ -86,7 +86,7 @@ export default {
             if (res.data.code === 200) {
               this.store.commit("user/updateUserToken", res.data.data.token)
               this.store.commit("user/updateUserNickname", res.data.data.nickname)
-              this.route.replace({path: '/main'});
+              this.route.replace({path: '/date'});
             } else {
               alert(res.data.message);
             }
@@ -104,7 +104,7 @@ export default {
       })
           .then(res => {
             if (res.data.code === 200) {
-              this.route.replace({path: '/main'});
+              this.route.replace({path: '/date'});
             }
           })
           .catch(error => {
@@ -133,7 +133,7 @@ export default {
       axios.post(process.env.BASE_URL + '/api/v1/user/register', this.loginData)
           .then(res => {
             if (res.data.code === 200) {
-              this.route.push({path: '/'});
+              alert(res.data.message);
             } else {
               alert(res.data.message);
             }

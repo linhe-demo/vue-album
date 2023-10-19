@@ -75,6 +75,7 @@ export default {
       diaPreviewVisible: false,
       //图片预览地址
       dialogImageUrl: "",
+      date: ''
     }
   },
   mounted() {
@@ -84,6 +85,7 @@ export default {
     const route = this.$route.query
     this.id = route.id
     this.title = route.title
+    this.date = route.date
     this.getDetail()
   },
   methods: {
@@ -161,7 +163,10 @@ export default {
     },
     back() {
       router.replace({
-        path: '/main'
+        path: '/main',
+        query: {
+          date: this.date
+        }
       })
     },
     add() {
