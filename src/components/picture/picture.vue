@@ -292,6 +292,7 @@ export default {
 }
 ::v-deep(.el-progress--line) {
   width: 100%;
+  margin-left: 20px;
 }
 ::v-deep(.el-upload-list__item) {
   width: 100%;
