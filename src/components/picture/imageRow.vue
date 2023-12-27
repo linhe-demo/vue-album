@@ -5,8 +5,8 @@
     </div>
 
     <div v-if="$data.isModalOpen" class="modal">
+      <div @click="closeModal" class="close-img">X</div>
       <div class="modal-content">
-        <div @click="closeModal" class="close-img">X</div>
         <div class="big-img">
           <el-carousel :autoplay="false" style="height: 100%;" arrow="hover">
             <el-carousel-item v-for="(image, index) in bigImages" :key="index">
@@ -127,18 +127,22 @@ export default {
   font-size: 12px;
   line-height: 30px;
   color: white;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
 }
 
 .modal-content {
   background-color: #101010;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
-  width: 84%;
-  height: 78%;
+  width: 90%;
+  height: 90%;
 }
 .big-img {
   width: 100%;
-  height: 90%;
+  height: 100%;
   opacity: 1;
 }
 .big-img-box {
