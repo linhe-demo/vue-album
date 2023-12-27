@@ -13,8 +13,8 @@
     </div>
   </div>
 
-  <el-dialog v-model="dialogVisible" title="新增照片" width="80%">
-    <div>
+  <el-dialog  v-model="dialogVisible" title="新增照片" width="80%">
+    <div v-loading="uploadLoadingStatus" :element-loading-text="upload_loading">
       <el-form>
         <el-form-item>
           <el-upload
@@ -37,13 +37,13 @@
           </el-upload>
         </el-form-item>
         <el-form-item>
-          <el-progress v-show="percentageStatus" :percentage="percentage"></el-progress>
-        </el-form-item>
-        <el-form-item>
           <el-button type="default" @click="cancelUpload">取消</el-button>
           <el-button type="primary" @click="handlePush">上传</el-button>
         </el-form-item>
       </el-form>
+    </div>
+    <div v-show="percentageStatus">
+      上传进度：<span style="font-size: 10px;color: #66b1ff;">(点击右上角X号可让上传过程变为后台进行)</span><el-progress :percentage="percentage" ></el-progress>
     </div>
   </el-dialog>
   <el-dialog title="图片预览" :visible.sync="diaPreviewVisible">
@@ -55,6 +55,7 @@ import {useStore} from 'vuex';
 import axios from "axios";
 import router from "../../router";
 import ImageRow from "/src/components/picture/imageRow.vue";
+import NP from 'number-precision';
 
 export default {
   name: "Index",
@@ -71,8 +72,10 @@ export default {
       percentage: 0,
       imgList: [],
       loading: "数据加载中请稍后!",
+      upload_loading: "文件上传中请稍后",
       dialogVisible: false,
       loadPicture: false,
+      uploadLoadingStatus: false,
       arr: [],
       lineNum: 3,
       spacingNumber: 5, //行间距单位px
@@ -100,6 +103,7 @@ export default {
   methods: {
     async handlePush() {
       this.percentageStatus = true
+      this.uploadLoadingStatus = true
       this.setTime()
       let fd = new FormData();
       this.fileList.forEach(item => {
@@ -112,12 +116,14 @@ export default {
       }).then(response => {
         if (response.data.code === 200) {
           this.percentageStatus = false
+          this.uploadLoadingStatus = false
           this.cleanSetTime()
           this.noticeCleanRedis()
           this.$router.go(0)
         } else {
           alert(response.data.message);
           this.percentageStatus = false
+          this.uploadLoadingStatus = false
           this.cleanSetTime()
           this.route.replace({path: '/'});
         }
@@ -137,7 +143,8 @@ export default {
     handleChange(file, fileList){
       this.fileList = fileList;
       this.fileNum = fileList.length
-      this.totalSize = Number(this.totalSize) + Number((file.size / (1024 * 1024)).toFixed(2))
+      console.log(Number(this.totalSize), Number((file.size / (1024 * 1024)).toFixed(2)), (file.size / (1024 * 1024)).toFixed(2))
+      this.totalSize = NP.plus(Number(this.totalSize), Number((file.size / (1024 * 1024)).toFixed(2)))
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 40 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
@@ -214,6 +221,8 @@ export default {
     cancelUpload() {
       this.fileList = []
       this.dialogVisible = false
+      this.totalSize = 0
+      this.fileNum = 0
     },
     back() {
       router.replace({
@@ -289,6 +298,10 @@ export default {
 }
 ::v-deep(.el-upload--picture) {
   display: block;
+}
+::v-deep(.el-upload-list) {
+  max-height: 200px;
+  overflow-y: auto;
 }
 .upload-demo{
   width: 100%;
