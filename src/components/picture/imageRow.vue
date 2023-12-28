@@ -95,7 +95,6 @@ export default {
               type: 'success',
               message: '删除成功!'
             });
-            this.$router.go(0)
           }
         }).catch(error => {
           console.log(error);
