@@ -95,6 +95,11 @@ export default {
               type: 'success',
               message: '删除成功!'
             });
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.message
+            });
           }
         }).catch(error => {
           console.log(error);
