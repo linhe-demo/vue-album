@@ -9,7 +9,7 @@
   <div class="detail" v-loading.fullscreen="loadPicture" :element-loading-text="loading">
     <div class="photoBox">
       <ImageRow
-          :images="arr" @sendValue="handleChildValue"/>
+          :images="arr" :token="token" @sendValue="handleChildValue"/>
     </div>
   </div>
 
@@ -189,7 +189,7 @@ export default {
       });
     },
     getDetail() {
-      this.loadPicture = true
+      // this.loadPicture = true
       let store = useStore()
       this.token = store.state.user.token
       axios.post(process.env.BASE_URL + '/api/v1/life/moment', {id: this.id}, {
@@ -204,7 +204,7 @@ export default {
             return
           }
           for (let i = 0; i < data.length; i++) {
-            this.arr.push({'src': data[i].imgUrl, 'horizontal': data[i].horizontalVersion})
+            this.arr.push({'id': data[i].id, 'src': data[i].imgUrl, 'horizontal': data[i].horizontalVersion})
           }
         } else {
           alert(response.data.message);

@@ -73,11 +73,17 @@ export default {
       this.loginStatus = true
 
       if (this.loginData.userName.length === 0) {
-        alert("用户名不能为空");
+        this.$message({
+          type: 'warning',
+          message: '用户名不能为空'
+        });
         return
       }
       if (this.loginData.passWord.length === 0) {
-        alert("用户密码不能为空");
+        this.$message({
+          type: 'warning',
+          message: '用户密码不能为空'
+        });
         return
       }
 
@@ -88,7 +94,10 @@ export default {
               this.store.commit("user/updateUserNickname", res.data.data.nickname)
               this.route.replace({path: '/date'});
             } else {
-              alert(res.data.message);
+              this.$message({
+                type: 'error',
+                message: res.data.message
+              });
             }
           })
           .catch(error => {
@@ -118,24 +127,39 @@ export default {
 
     commit() {
       if (this.loginData.userName.length === 0) {
-        alert("用户名不能为空");
+        this.$message({
+          type: 'warning',
+          message: '用户名不能为空'
+        });
         return
       }
       if (this.loginData.passWord.length === 0) {
-        alert("用户密码不能为空");
+        this.$message({
+          type: 'warning',
+          message: '用户密码不能为空'
+        });
         return
       }
       if (this.loginData.passWord.length === 0) {
-        alert("用户昵称不能为空");
+        this.$message({
+          type: 'warning',
+          message: '用户昵称不能为空'
+        });
         return
       }
 
       axios.post(process.env.BASE_URL + '/api/v1/user/register', this.loginData)
           .then(res => {
             if (res.data.code === 200) {
-              alert(res.data.message);
+              this.$message({
+                type: 'success',
+                message: res.data.message
+              });
             } else {
-              alert(res.data.message);
+              this.$message({
+                type: 'error',
+                message: res.data.message
+              });
             }
           })
           .catch(error => {

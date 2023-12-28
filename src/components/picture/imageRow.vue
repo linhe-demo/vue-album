@@ -1,17 +1,19 @@
 <template>
   <div class="image-grid">
     <div class="grid-item" v-for="(image, index) in images" :key="index" @click="showModal(index)">
-      <img :src="image.src" @load="loadComplete" :class="{ 'portrait-image': shouldAddClass(image) }" alt="Image" style="width: 100%;height: 100%;object-fit: cover;" />
+      <img v-lazy="image.src" :class="{ 'portrait-image': shouldAddClass(image) }" alt="Image"
+           style="width: 100%;height: 100%;object-fit: cover;"/>
     </div>
-
     <div v-if="$data.isModalOpen" class="modal">
       <div @click="closeModal" class="close-img">X</div>
+      <div @click="moveModal" class="move-img">删除</div>
       <div class="modal-content">
         <div class="big-img">
-          <el-carousel :autoplay="false" style="height: 100%;" arrow="hover">
+          <el-carousel :autoplay="false" @change="handleChange" style="height: 100%;" arrow="hover">
             <el-carousel-item v-for="(image, index) in bigImages" :key="index">
               <div class="big-img-box">
-                <img :src="image.src" :class="{ 'portrait-image': shouldAddClass(image) }"  alt="Image" style="width: 100%;height: 100%;object-fit: cover;" />
+                <img :src="image.src" :class="{ 'portrait-image': shouldAddClass(image) }" alt="Image"
+                     style="width: 100%;height: 100%;object-fit: cover;"/>
               </div>
             </el-carousel-item>
           </el-carousel>
@@ -23,6 +25,8 @@
 </template>
 
 <script>
+
+import axios from "axios";
 
 export default {
   props: {
@@ -37,24 +41,23 @@ export default {
       required: true,
       default: () => [],
     },
+    token: {
+      type: String,
+      required: true,
+      default: () => ''
+    }
   },
   data() {
     return {
       isModalOpen: false,
-      bigImages: []
+      bigImages: [],
+      currentId: 0,
     }
   },
   mounted() {
     this.complete = 0
   },
   methods: {
-    loadComplete() {
-      this.total = this.images.length
-      this.complete += 1
-      if (this.complete === this.total) {
-        this.$emit('sendValue', 'ok')
-      }
-    },
     showModal(index) {
       this.isModalOpen = true;
       const imgList = []
@@ -63,19 +66,46 @@ export default {
           imgList.push(this.images[i])
         }
       }
-      console.log(imgList, this.images[index])
       imgList.unshift(this.images[index])
       this.bigImages = imgList
+      this.currentId = this.images[index].id
     },
-    shouldAddClass(item){
-      if (item.horizontal === 1) {
-        return true;
-      } else {
-        return false;
-      }
+    handleChange(now, prev) {
+      this.currentId = this.images[now].id
+    },
+    shouldAddClass(item) {
+      return item.horizontal === 1;
     },
     closeModal() {
       this.isModalOpen = false;
+    },
+    moveModal() {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        axios.post(process.env.BASE_URL + '/api/v1/remove/image', {id:this.currentId}, {
+          headers: {
+            'Authorization': this.token
+          }
+        }).then(response => {
+          if (response.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.$router.go(0)
+          }
+        }).catch(error => {
+          console.log(error);
+        });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     }
   }
 }
@@ -133,6 +163,22 @@ export default {
   z-index: 10;
 }
 
+.move-img {
+  background-color: #878282;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 30px;
+  color: white;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  opacity: 0;
+}
+
 .modal-content {
   background-color: #101010;
   padding: 10px;
@@ -140,11 +186,13 @@ export default {
   width: 90%;
   height: 90%;
 }
+
 .big-img {
   width: 100%;
   height: 100%;
   opacity: 1;
 }
+
 .big-img-box {
   border-radius: 5px;
   width: 100%;
@@ -152,14 +200,17 @@ export default {
   object-fit: cover;
   overflow: hidden;
 }
+
 .carousel-slider img {
   width: 100%;
   height: auto;
 }
+
 ::v-deep(.el-carousel .el-carousel__container) {
   height: 100%;
   border-radius: 5px;
 }
+
 ::v-deep(.el-carousel__indicators--horizontal) {
   display: none;
 }
