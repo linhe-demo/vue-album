@@ -125,7 +125,8 @@ export default {
   width: 100%;
   height: 68%;
   overflow-y: auto;
-  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  background: transparent url("http://www.life-moment.top/images/static/bk4.jpg") center;
+  background-size: cover;
 }
 
 .card-list {
