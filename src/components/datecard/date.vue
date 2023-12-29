@@ -1,9 +1,20 @@
 <template>
   <div class="title">
-    <div class="welcome">
-      欢迎 {{ customer }} 来小屋 ^_^
+    <div class="top">
+      <div class="top-left">
+        <div class="welcome">
+          欢迎 {{ customer }} 来小屋 ^_^
+        </div>
+        <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
+      </div>
+      <div class="top-right">
+        <div v-if="dateInfo.solarDate !== ''"> {{ dateInfo.solarDate }}</div>
+        <div v-if="dateInfo.lunarDate !== ''"> {{ dateInfo.lunarDate }}</div>
+        <div v-if="dateInfo.lunarTerm !== ''"> {{ dateInfo.lunarTerm }}</div>
+        <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
+        <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
+      </div>
     </div>
-    <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
@@ -47,7 +58,8 @@ export default {
         date: ""
       },
       loadDate: false,
-      loading: "数据加载中，请稍后！"
+      loading: "数据加载中，请稍后！",
+      dateInfo: []
     }
   },
   mounted() {
@@ -57,6 +69,7 @@ export default {
     this.token = store.state.user.token
     this.route = useRouter()
     this.getConfig()
+    this.getDateInfo()
   },
   methods: {
     getConfig() {
@@ -74,6 +87,20 @@ export default {
           this.route.replace({path: '/'});
         }
         this.loadAlbum = false
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+    getDateInfo() {
+      let store = useStore()
+      axios.post(process.env.BASE_URL + '/api/v1/date/info', {}, {
+        headers: {
+          'Authorization': store.state.user.token
+        }
+      }).then(response => {
+        if (response.data.code === 200) {
+          this.dateInfo = response.data.data
+        }
       }).catch(error => {
         console.log(error);
       });
@@ -137,7 +164,7 @@ export default {
 
 .card {
   margin-left: 10px;
-  margin-top:20px;
+  margin-top: 20px;
   height: 80px;
   width: 84%;
   line-height: 40px;
@@ -154,7 +181,7 @@ export default {
 
 .title-desc {
   color: white;
-  height: 56%;
+  height: 80%;
   display: flex;
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
@@ -167,6 +194,24 @@ export default {
   font-size: 12px;
   text-align: right;
   padding-right: 5px;
+}
+
+.top {
+  height: 80%;
+  display: flex;
+}
+
+.top-left {
+  width: 50%;
+  height: 100%;
+}
+
+.top-right {
+  width: 50%;
+  height: 100%;
+  color: white;
+  font-size: 12px;
+  line-height: 22px;
 }
 </style>
 
