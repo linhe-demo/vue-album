@@ -8,11 +8,14 @@
         <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
       </div>
       <div class="top-right">
-        <div v-if="dateInfo.solarDate !== ''"> {{ dateInfo.solarDate }}</div>
-        <div v-if="dateInfo.lunarDate !== ''"> {{ dateInfo.lunarDate }}</div>
-        <div v-if="dateInfo.lunarTerm !== ''"> {{ dateInfo.lunarTerm }}</div>
-        <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
-        <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
+        <div style=" height: 80%;">
+          <div v-if="dateInfo.solarDate !== ''"> {{ dateInfo.solarDate }}</div>
+          <div v-if="dateInfo.lunarDate !== ''"> {{ dateInfo.lunarDate }}</div>
+          <div v-if="dateInfo.lunarTerm !== ''"> {{ dateInfo.lunarTerm }}</div>
+          <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
+          <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
+        </div>
+        <div style="font-size: 12px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
       </div>
     </div>
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
@@ -202,15 +205,15 @@ export default {
 }
 
 .top-left {
-  width: 50%;
+  width: 52%;
   height: 100%;
 }
 
 .top-right {
-  width: 50%;
+  width: 48%;
   height: 100%;
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 22px;
 }
 </style>
