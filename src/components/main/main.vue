@@ -32,7 +32,7 @@
           <el-input v-model="albumForm.desc"></el-input>
         </el-form-item>
         <el-form-item label="相册时间">
-          <el-date-picker type="date" placeholder="选择日期" v-model="albumForm.date" style="width: 100%;"></el-date-picker>
+          <el-date-picker type="date" placeholder="选择日期" v-model="albumForm.date" format="YYYY-MM-DD" value-format="YYYY-MM-DD" style="width: 100%;"></el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button type="default" @click="cancelSave">取消</el-button>
@@ -116,15 +116,24 @@ export default {
     },
     saveAlbum() {
       if (this.albumForm.name.length === 0) {
-        alert("请填写相册名");
+        this.$message({
+          type: 'warning',
+          message: '请填写相册名!'
+        });
         return
       }
       if (this.albumForm.desc.length === 0) {
-        alert("请填写相册描述");
+        this.$message({
+          type: 'warning',
+          message: '请填写相册描述!'
+        });
         return
       }
       if (this.albumForm.date.length === 0){
-        alert("请选择相册时间");
+        this.$message({
+          type: 'warning',
+          message: '请选择相册时间!'
+        });
         return
       }
       this.loadAlbum = true
