@@ -27,8 +27,8 @@ export default defineConfig({
         'process.env': {
             "MUSIC_URL": "http://www.life-moment.top/music",
             "RESOURCE_URL": "http://www.life-moment.top/images/static",
-            'BASE_URL': 'http://life-moment.top:8806'
-            // 'REQUEST_URL': 'http://127.0.0.1:8806'
+            'BASE_URL': 'http://life-moment.top:8080'
+            // 'REQUEST_URL': 'http://127.0.0.1:8080'
         }
     },
     build: {
