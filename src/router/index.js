@@ -6,6 +6,8 @@ import Error from '../components/error/error.vue'
 import Main from '../components/main/main.vue'
 import Picture from '../components/picture/picture.vue'
 import Date from '../components/datecard/date.vue'
+import Felling from '../components/felling/index.vue'
+import Wealth from '../components/wealth/index.vue'
 
 const routes = [
     {
@@ -42,6 +44,16 @@ const routes = [
         path: '/date',
         name: 'date',
         component: Date
+    },
+    {
+        path: '/felling',
+        name: 'felling',
+        component: Felling
+    },
+    {
+        path: "/wealth",
+        name: 'wealth',
+        component: Wealth
     }
 ]
 

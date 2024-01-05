@@ -21,18 +21,35 @@
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
-    <div class="card-list">
-      <el-card class="card" v-for="(item, index) in dateList" :key="index" shadow="always" @click="showTimeLine(item)">
-        {{ item }}
-      </el-card>
+    <div class="block">
+      <el-timeline>
+        <el-timeline-item timestamp="2024/1/5" placement="top">
+          <el-card>
+            <h4>开心 开心</h4>
+            <p>开心 开心 开心 开心 开心 开心</p>
+          </el-card>
+        </el-timeline-item>
+        <el-timeline-item timestamp="2024/1/6" placement="top">
+          <el-card>
+            <h4>快乐 快乐</h4>
+            <p>快乐 快乐 快乐 快乐 快乐 快乐</p>
+          </el-card>
+        </el-timeline-item>
+        <el-timeline-item timestamp="2024/1/7" placement="top">
+          <el-card>
+            <h4>欢喜 欢喜</h4>
+            <p>欢喜 欢喜 欢喜 欢喜 欢喜 欢喜</p>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
     </div>
   </div>
   <div class="foot">
     <div class="box">
-      <el-button type="primary" circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="feeling">心情</span></el-button>
+      <el-button type="primary" circle><span style="font-size: 12px;" @click="feeling">心情</span></el-button>
     </div>
     <div class="box">
       <el-button circle><span style="font-size: 12px;" @click="wealth">财富</span></el-button>
@@ -62,7 +79,8 @@ export default {
       },
       loadDate: false,
       loading: "数据加载中，请稍后！",
-      dateInfo: []
+      dateInfo: [],
+      timelineItems: ['事件1', '事件2', '事件3']
     }
   },
   mounted() {
@@ -165,25 +183,12 @@ export default {
   width: 100%;
   height: 68%;
   overflow-y: auto;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   background: transparent url("http://www.life-moment.top/images/static/bk4.jpg") center;
   background-size: cover;
-}
-
-.card-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 将容器分为三等分 */
-  grid-gap: 1px; /* 卡片之间的间距 */
-}
-
-.card {
-  margin-left: 10px;
-  margin-top: 20px;
-  height: 80px;
-  width: 84%;
-  line-height: 40px;
   text-align: center;
-  font-weight: bold;
-  color: #ababab;
 }
 
 .welcome {
@@ -225,6 +230,20 @@ export default {
   color: white;
   font-size: 11px;
   line-height: 22px;
+}
+
+.block{
+  width: 90%;
+  height: 100%;
+  margin-top: 10px;
+}
+::v-deep(.el-timeline) {
+  padding-left: 0px;
+}
+::v-deep(.is-top) {
+  text-align: left;
+  color: white;
+  font-weight: bold;
 }
 </style>
 

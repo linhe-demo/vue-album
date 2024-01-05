@@ -22,20 +22,18 @@
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
     <div class="card-list">
-      <el-card class="card" v-for="(item, index) in dateList" :key="index" shadow="always" @click="showTimeLine(item)">
-        {{ item }}
-      </el-card>
+
     </div>
   </div>
   <div class="foot">
     <div class="box">
-      <el-button type="primary" circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
     </div>
     <div class="box">
       <el-button circle><span style="font-size: 12px;" @click="feeling">心情</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="wealth">财富</span></el-button>
+      <el-button type="primary" circle><span style="font-size: 12px;" @click="wealth">财富</span></el-button>
     </div>
   </div>
 </template>
@@ -164,6 +162,7 @@ export default {
 .date-box {
   width: 100%;
   height: 68%;
+
   overflow-y: auto;
   background: transparent url("http://www.life-moment.top/images/static/bk4.jpg") center;
   background-size: cover;
