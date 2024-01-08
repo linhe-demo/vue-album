@@ -142,6 +142,8 @@ export default {
     },
     open(title, value){
       this.$alert(value, title, {
+        showConfirmButton: false,
+        customClass: 'custom-alert',
         center: true
       });
     }
@@ -240,13 +242,25 @@ export default {
   text-align: left;
   line-height: 20px;
 }
+.custom-alert{
+  height: 81%;
+  overflow-y: auto;
+}
 ::v-deep(.el-timeline) {
-  padding-left: 0px;
+  padding-left: 0;
 }
 ::v-deep(.is-top) {
   text-align: left;
   color: white;
   font-weight: bold;
+}
+::v-deep(.el-overlay-message-box) {
+  height: 81%;
+  overflow-y: auto;
+}
+::v-deep(.is-message-box) {
+  height: 81%;
+  overflow-y: auto;
 }
 
 </style>
