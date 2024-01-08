@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git pull https://github.com/linhe-demo/vue-album.git
+
 npm run build
 
 docker stop vue
