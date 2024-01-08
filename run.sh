@@ -1,13 +1,13 @@
 #!/bin/bash
 
-sudo npm run build
+npm run build
 
-sudo docker stop vue
+docker stop vue
 
-sduo docker rm vue
+docker rm vue
 
-sudo docker rmi vue::latest
+docker rmi vue::latest
 
-sudo docker build -t vue::latest .
+docker build -t vue .
 
 sduo docker run -d -p 80:80 --name vue vue:latest
