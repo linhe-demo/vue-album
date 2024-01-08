@@ -29,13 +29,13 @@
   </div>
   <div class="foot">
     <div class="box">
-      <el-button type="primary" circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
+      <el-button type="primary" circle><span style="font-size: 12px;" @click="footprints">岁月</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="feeling">心情</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="feeling">星闪</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="wealth">财富</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="wealth">福利</span></el-button>
     </div>
   </div>
 </template>

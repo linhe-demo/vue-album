@@ -22,23 +22,11 @@
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
     <div class="block">
-      <el-timeline>
-        <el-timeline-item timestamp="2024/1/5" placement="top">
-          <el-card>
-            <h4>开心 开心</h4>
-            <p>开心 开心 开心 开心 开心 开心</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2024/1/6" placement="top">
-          <el-card>
-            <h4>快乐 快乐</h4>
-            <p>快乐 快乐 快乐 快乐 快乐 快乐</p>
-          </el-card>
-        </el-timeline-item>
-        <el-timeline-item timestamp="2024/1/7" placement="top">
-          <el-card>
-            <h4>欢喜 欢喜</h4>
-            <p>欢喜 欢喜 欢喜 欢喜 欢喜 欢喜</p>
+      <el-timeline >
+        <el-timeline-item v-for="(item, index) in timelineItems" :timestamp="item.date" :color="red"  placement="top">
+          <el-card @click="open(item.title, item.text)">
+            <p style="font-weight: bold; text-align: left; line-height: 12px;">{{ item.title }}</p>
+            <div class="box-text">{{ item.text }}</div>
           </el-card>
         </el-timeline-item>
       </el-timeline>
@@ -46,13 +34,13 @@
   </div>
   <div class="foot">
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="footprints">足迹</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="footprints">岁月</span></el-button>
     </div>
     <div class="box">
-      <el-button type="primary" circle><span style="font-size: 12px;" @click="feeling">心情</span></el-button>
+      <el-button type="primary" circle><span style="font-size: 12px;" @click="feeling">星闪</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="wealth">财富</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="wealth">福利</span></el-button>
     </div>
   </div>
 </template>
@@ -96,15 +84,18 @@ export default {
     getConfig() {
       this.loadAlbum = true
       let store = useStore()
-      axios.post(process.env.BASE_URL + '/api/v1/date/list', {}, {
+      axios.post(process.env.BASE_URL + '/api/v1/life/felling', {}, {
         headers: {
           'Authorization': store.state.user.token
         }
       }).then(response => {
         if (response.data.code === 200) {
-          this.dateList = response.data.data
+          this.timelineItems = response.data.data
         } else {
-          alert(response.data.message);
+          this.$message({
+            type: 'error',
+            message: response.data.message
+          });
           this.route.replace({path: '/'});
         }
         this.loadAlbum = false
@@ -148,6 +139,11 @@ export default {
       this.route.replace({
         path: '/wealth'
       })
+    },
+    open(title, value){
+      this.$alert(value, title, {
+        center: true
+      });
     }
   }
 }
@@ -237,6 +233,13 @@ export default {
   height: 100%;
   margin-top: 10px;
 }
+.box-text{
+  overflow: hidden;  /* 隐藏超出部分 */
+  text-overflow: ellipsis;  /* 超出部分显示省略号 */
+  white-space: nowrap;  /* 文本不换行 */
+  text-align: left;
+  line-height: 20px;
+}
 ::v-deep(.el-timeline) {
   padding-left: 0px;
 }
@@ -245,5 +248,6 @@ export default {
   color: white;
   font-weight: bold;
 }
+
 </style>
 
