@@ -21,6 +21,9 @@
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
+    <div class="add-btn">
+      <el-button type="primary" @click="addFeeling" round>新增</el-button>
+    </div>
     <div class="block">
       <el-timeline >
         <el-timeline-item v-for="(item, index) in timelineItems" :timestamp="item.date" :color="red"  placement="top">
@@ -43,7 +46,26 @@
       <el-button circle><span style="font-size: 12px;" @click="wealth">福利</span></el-button>
     </div>
   </div>
+
+  <el-dialog v-loading="fellingLoading" title="记录星闪瞬间" width="90%" v-model="dialogVisible">
+    <el-form :model="form">
+      <el-form-item>
+        <el-input
+            type="textarea"
+            :rows="16"
+            placeholder="请输入内容"
+            v-model="form.fellingText">
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="cancel">取 消</el-button>
+      <el-button type="primary" @click="submit">确 定</el-button>
+    </div>
+  </el-dialog>
+
 </template>
+
 <script>
 import {useStore} from 'vuex';
 import axios from "axios";
@@ -60,6 +82,7 @@ export default {
       route: {},
       token: "",
       dialogVisible: false,
+      fellingLoading: false,
       albumForm: {
         name: "",
         desc: "",
@@ -68,7 +91,10 @@ export default {
       loadDate: false,
       loading: "数据加载中，请稍后！",
       dateInfo: [],
-      timelineItems: ['事件1', '事件2', '事件3']
+      timelineItems: [],
+      form:{
+        fellingText: ''
+      },
     }
   },
   mounted() {
@@ -142,10 +168,28 @@ export default {
     },
     open(title, value){
       this.$alert(value, title, {
-        showConfirmButton: false,
+        showConfirmButton: true,
+        confirmButtonText: "关闭",
         customClass: 'custom-alert',
         center: true
       });
+    },
+    addFeeling(){
+      this.dialogVisible = true
+    },
+    cancel(){
+      this.form.fellingText = ''
+      this.dialogVisible = false
+    },
+    submit(){
+      this.loadDate = true
+      this.loading = "数据保存中，请稍后！"
+      this.dialogVisible = false
+      this.$message({
+        type: 'success',
+        message: "保存成功"
+      });
+      this.loadDate = false
     }
   }
 }
@@ -234,6 +278,7 @@ export default {
   width: 90%;
   height: 100%;
   margin-top: 10px;
+  padding-top: 10px;
 }
 .box-text{
   overflow: hidden;  /* 隐藏超出部分 */
@@ -242,9 +287,11 @@ export default {
   text-align: left;
   line-height: 20px;
 }
-.custom-alert{
-  height: 81%;
-  overflow-y: auto;
+.add-btn{
+  position: absolute;
+  top: 20.5%;
+  right: 0.5%;
+  z-index: 10;
 }
 ::v-deep(.el-timeline) {
   padding-left: 0;
@@ -254,14 +301,12 @@ export default {
   color: white;
   font-weight: bold;
 }
-::v-deep(.el-overlay-message-box) {
-  height: 81%;
-  overflow-y: auto;
-}
-::v-deep(.is-message-box) {
-  height: 81%;
-  overflow-y: auto;
-}
+</style>
 
+<style>
+.custom-alert{
+  height: 81%;
+  overflow-y: auto!important;
+}
 </style>
 
