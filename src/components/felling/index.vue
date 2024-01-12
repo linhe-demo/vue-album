@@ -49,10 +49,16 @@
 
   <el-dialog v-loading="fellingLoading" title="记录星闪瞬间" width="90%" v-model="dialogVisible">
     <el-form :model="form">
-      <el-form-item>
+      <el-form-item label="标题：">
+        <el-input
+            placeholder="请输入标题"
+            v-model="form.title">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="内容：">
         <el-input
             type="textarea"
-            :rows="16"
+            :rows="12"
             placeholder="请输入内容"
             v-model="form.fellingText">
         </el-input>
@@ -93,6 +99,7 @@ export default {
       dateInfo: [],
       timelineItems: [],
       form:{
+        title: '',
         fellingText: ''
       },
     }
@@ -110,6 +117,7 @@ export default {
     getConfig() {
       this.loadAlbum = true
       let store = useStore()
+      this.token = store.state.user.token
       axios.post(process.env.BASE_URL + '/api/v1/life/felling', {}, {
         headers: {
           'Authorization': store.state.user.token
@@ -179,17 +187,49 @@ export default {
     },
     cancel(){
       this.form.fellingText = ''
+      this.form.title = ""
       this.dialogVisible = false
     },
     submit(){
+      if (this.form.title.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: "标题不能为空！"
+        });
+        return
+      }
+      if (this.form.fellingText.length === 0) {
+        this.$message({
+          type: 'warning',
+          message: "内容不能为空！"
+        });
+        return
+      }
       this.loadDate = true
       this.loading = "数据保存中，请稍后！"
-      this.dialogVisible = false
-      this.$message({
-        type: 'success',
-        message: "保存成功"
+
+      axios.post(process.env.BASE_URL + '/api/v1/felling/save', this.form, {
+        headers: {
+          'Authorization': this.token
+        }
+      }).then(response => {
+        if (response.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: "保存成功！"
+          });
+        }
+        this.dialogVisible = false
+        this.loadDate = false
+        location.reload();
+      }).catch(error => {
+        this.$message({
+          type: 'error',
+          message: error
+        });
+        this.dialogVisible = false
+        this.loadDate = false
       });
-      this.loadDate = false
     }
   }
 }
@@ -292,6 +332,9 @@ export default {
   top: 20.5%;
   right: 0.5%;
   z-index: 10;
+}
+.dialog-footer {
+  text-align: center;
 }
 ::v-deep(.el-timeline) {
   padding-left: 0;
