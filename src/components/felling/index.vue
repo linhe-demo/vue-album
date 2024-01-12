@@ -176,8 +176,7 @@ export default {
     },
     open(title, value){
       this.$alert(value, title, {
-        showConfirmButton: true,
-        confirmButtonText: "关闭",
+        showConfirmButton: false,
         customClass: 'custom-alert',
         center: true
       });
@@ -348,7 +347,7 @@ export default {
 
 <style>
 .custom-alert{
-  height: 81%;
+  max-height: 81%;
   overflow-y: auto!important;
 }
 </style>
