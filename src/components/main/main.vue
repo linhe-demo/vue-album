@@ -186,6 +186,8 @@ export default {
   width: 100%;
   height: 90%;
   overflow-y: auto;
+  background: transparent url("http://www.life-moment.top/images/life/1696851388379") center;
+  background-size: cover;
 }
 
 .title-desc {
@@ -205,7 +207,7 @@ export default {
 }
 
 .welcome {
-  color: white;
+  color: #b1acac;
   padding-left: 10px;
   padding-top: 10px;
   display: inline-flex;
@@ -227,7 +229,7 @@ export default {
   margin-left: 1px;
   border-right: 2px dashed #b0b0b0;
   font-weight: bold;
-  color: #adadad;
+  color: white;
   font-size: 13px;
 }
 

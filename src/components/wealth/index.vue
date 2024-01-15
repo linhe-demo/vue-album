@@ -22,7 +22,26 @@
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
     <div class="card-list">
-
+      <div class="card">
+        <p>捶背卡</p>
+        <p>X 0</p>
+      </div>
+      <div class="card">
+        <p>按摩卡</p>
+        <p>X 0</p>
+      </div>
+      <div class="card">
+        <p>捏腿卡</p>
+        <p>X 0</p>
+      </div>
+      <div class="card">
+        <p>吹发卡</p>
+        <p>X 0</p>
+      </div>
+      <div class="card">
+        <p>零食卡</p>
+        <p>X 0</p>
+      </div>
     </div>
   </div>
   <div class="foot">
@@ -177,12 +196,16 @@ export default {
 .card {
   margin-left: 10px;
   margin-top: 20px;
-  height: 80px;
+  height: 100px;
   width: 84%;
   line-height: 40px;
   text-align: center;
   font-weight: bold;
-  color: #ababab;
+  color: white;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  background-color: #b8c8d8;
+  padding-bottom: 20px;
 }
 
 .welcome {
