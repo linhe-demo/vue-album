@@ -254,6 +254,8 @@ export default {
   width: 100%;
   height: 92%;
   overflow-y: auto;
+  background: transparent url("http://www.life-moment.top/images/static/bk7.jpg") center;
+  background-size: cover;
 }
 
 .welcome {

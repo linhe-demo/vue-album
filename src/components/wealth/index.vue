@@ -181,7 +181,6 @@ export default {
 .date-box {
   width: 100%;
   height: 68%;
-
   overflow-y: auto;
   background: transparent url("http://www.life-moment.top/images/static/bk4.jpg") center;
   background-size: cover;
