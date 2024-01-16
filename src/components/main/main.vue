@@ -186,7 +186,7 @@ export default {
   width: 100%;
   height: 90%;
   overflow-y: auto;
-  background: transparent url("http://www.life-moment.top/images/life/1696851388379") center;
+  background: transparent url("http://www.life-moment.top/images/static/bk12.jpg") center;
   background-size: cover;
 }
 
