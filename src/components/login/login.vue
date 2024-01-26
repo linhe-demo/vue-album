@@ -153,13 +153,13 @@ export default {
             if (res.data.code === 200) {
               this.$message({
                 type: 'success',
-                message: res.data.message
+                message: res.data.data.msg
               });
               this.backLogin()
             } else {
               this.$message({
                 type: 'error',
-                message: res.data.message
+                message: res.data.data.msg
               });
             }
           })
