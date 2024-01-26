@@ -155,6 +155,7 @@ export default {
                 type: 'success',
                 message: res.data.message
               });
+              this.backLogin()
             } else {
               this.$message({
                 type: 'error',

@@ -42,6 +42,18 @@
         <p>零食卡</p>
         <p>X 0</p>
       </div>
+      <div class="card">
+        <p>花花卡</p>
+        <p>X 0</p>
+      </div>
+      <div class="card">
+        <p>旅游卡</p>
+        <p>X 0</p>
+      </div>
+      <div class="card">
+        <p>陪逛卡</p>
+        <p>X 0</p>
+      </div>
     </div>
   </div>
   <div class="foot">
