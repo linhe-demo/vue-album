@@ -8,16 +8,20 @@
         <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
       </div>
       <div class="top-right">
-        <div style=" height: 80%;">
+        <div style=" height: 55%;">
           <div v-if="dateInfo.solarDate !== ''"> {{ dateInfo.solarDate }}</div>
           <div v-if="dateInfo.lunarDate !== ''"> {{ dateInfo.lunarDate }}</div>
           <div v-if="dateInfo.lunarTerm !== ''"> {{ dateInfo.lunarTerm }}</div>
-          <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
-          <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
+          <div style="display: flex">
+            <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
+            <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
+          </div>
         </div>
-        <div style="font-size: 10px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
-        <div style="font-size: 10px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
-        <div style="font-size: 10px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
+        <div style=" height: 20%;">
+          <div style="font-size: 12px;font-weight: bold; margin-right: 20px" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
+          <div style="font-size: 12px;font-weight: bold; margin-right: 20px" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
+          <div style="font-size: 12px;font-weight: bold; margin-right: 20px" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
+        </div>
       </div>
     </div>
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
@@ -212,7 +216,7 @@ export default {
 }
 
 .top {
-  height: 80%;
+  height: 85%;
   display: flex;
 }
 

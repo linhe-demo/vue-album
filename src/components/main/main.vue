@@ -2,7 +2,7 @@
   <div class="title">
     <div class="welcome">
       <el-button type="primary" @click="back" class="btn">返回</el-button>
-      <div class="title-desc">{{ date }}</div>
+      <div class="title-desc">{{ date }} 星闪瞬间</div>
       <el-button type="success" @click="addAlbum" style="margin-right:20px;" class="btn">新增</el-button>
     </div>
   </div>
