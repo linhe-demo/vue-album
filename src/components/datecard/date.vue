@@ -17,10 +17,10 @@
             <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
           </div>
         </div>
-        <div style=" height: 20%;">
-          <div style="font-size: 12px;font-weight: bold; margin-right: 20px" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
-          <div style="font-size: 12px;font-weight: bold; margin-right: 20px" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
-          <div style="font-size: 12px;font-weight: bold; margin-right: 20px" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
+        <div style=" height: 20%; padding-left: 78px;">
+          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
+          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
+          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
         </div>
       </div>
     </div>
@@ -230,7 +230,7 @@ export default {
   height: 100%;
   color: white;
   font-size: 11px;
-  line-height: 22px;
+  line-height: 18px;
 }
 </style>
 
