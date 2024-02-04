@@ -15,6 +15,7 @@
           <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
           <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
         </div>
+        <div style="font-size: 12px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
         <div style="font-size: 12px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
       </div>
     </div>
