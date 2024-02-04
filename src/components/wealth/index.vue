@@ -15,8 +15,9 @@
           <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
           <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
         </div>
-        <div style="font-size: 12px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
-        <div style="font-size: 12px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
+        <div style="font-size: 10px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
+        <div style="font-size: 10px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
+        <div style="font-size: 10px;font-weight: bold;text-align: right; margin-right: 20px" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
       </div>
     </div>
     <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
