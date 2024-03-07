@@ -207,6 +207,7 @@ export default {
   color: white;
   padding-left: 10px;
   padding-top: 10px;
+  font-size: 11px;
 }
 
 .pregnant-detail {
