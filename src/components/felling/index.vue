@@ -49,7 +49,7 @@
       <el-button type="primary" circle><span style="font-size: 12px;" @click="feeling">星闪</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="wealth">福利</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="wealth">宝宝</span></el-button>
     </div>
   </div>
 
@@ -108,6 +108,7 @@ export default {
         title: '',
         fellingText: ''
       },
+      editorOption: []
     }
   },
   mounted() {
@@ -348,6 +349,9 @@ export default {
   text-align: left;
   color: white;
   font-weight: bold;
+}
+.quill-editor .ql-editor {
+  height: 200px; /* 根据需要调整编辑器的高度 */
 }
 </style>
 

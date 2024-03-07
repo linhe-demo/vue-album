@@ -1,76 +1,25 @@
 <template>
   <div class="title">
     <div class="top">
-      <div class="top-left">
-        <div class="welcome">
-          欢迎 {{ customer }} 来小屋 ^_^
-        </div>
-        <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
-      </div>
-      <div class="top-right">
-        <div style=" height: 55%;">
-          <div v-if="dateInfo.solarDate !== ''"> {{ dateInfo.solarDate }}</div>
-          <div v-if="dateInfo.lunarDate !== ''"> {{ dateInfo.lunarDate }}</div>
-          <div v-if="dateInfo.lunarTerm !== ''"> {{ dateInfo.lunarTerm }}</div>
-          <div style="display: flex">
-            <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
-            <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
-          </div>
-        </div>
-        <div style=" height: 20%; padding-left: 78px;">
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
-        </div>
-      </div>
+      <div class="welcome">{{ welcome }}</div>
+      <div class="welcome">{{ dueDate }}</div>
+      <div class="welcome">{{ pregnantWeeks }}</div>
+      <div class="pregnant-detail" @click="openDetail(pregnantWeeksDetail)">{{ pregnantWeeksDetail }}</div>
     </div>
-    <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
     <div class="card-list">
-      <div class="card">
-        <p>捶背卡</p>
-        <p>X 0</p>
-      </div>
-      <div class="card">
-        <p>按摩卡</p>
-        <p>X 0</p>
-      </div>
-      <div class="card">
-        <p>捏腿卡</p>
-        <p>X 0</p>
-      </div>
-      <div class="card">
-        <p>吹发卡</p>
-        <p>X 0</p>
-      </div>
-      <div class="card">
-        <p>零食卡</p>
-        <p>X 0</p>
-      </div>
-      <div class="card">
-        <p>花花卡</p>
-        <p>X 0</p>
-      </div>
-      <div class="card">
-        <p>旅游卡</p>
-        <p>X 0</p>
-      </div>
-      <div class="card">
-        <p>陪逛卡</p>
-        <p>X 0</p>
-      </div>
     </div>
   </div>
   <div class="foot">
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="footprints">岁月</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="footprints">{{ btn1 }}</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="feeling">星闪</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="feeling">{{ btn2 }}</span></el-button>
     </div>
     <div class="box">
-      <el-button type="primary" circle><span style="font-size: 12px;" @click="wealth">福利</span></el-button>
+      <el-button type="primary" circle><span style="font-size: 12px;" @click="wealth">{{ btn3 }}</span></el-button>
     </div>
   </div>
 </template>
@@ -88,6 +37,14 @@ export default {
       currentYear: "",
       dateList: [],
       route: {},
+      btn1: "岁月",
+      btn2: "星闪",
+      btn3: "未来",
+      welcome: "",
+      dueDate: "",
+      pregnantWeeks: "",
+      pregnantWeeksDetail: "",
+      week: "",
       token: "",
       dialogVisible: false,
       albumForm: {
@@ -131,13 +88,20 @@ export default {
     },
     getDateInfo() {
       let store = useStore()
-      axios.post(process.env.BASE_URL + '/api/v1/date/info', {}, {
+      axios.post(process.env.BASE_URL + '/api/v1/feature/info', {}, {
         headers: {
           'Authorization': store.state.user.token
         }
       }).then(response => {
         if (response.data.code === 200) {
-          this.dateInfo = response.data.data
+          this.btn1 = response.data.data.btn1
+          this.btn2 = response.data.data.btn2
+          this.btn3 = response.data.data.btn3
+          this.welcome = response.data.data.welcomeStr
+          this.dueDate = response.data.data.dueDate
+          this.pregnantWeeksDetail = response.data.data.pregnantWeeksDetail
+          this.pregnantWeeks = response.data.data.pregnantWeeks
+          this.week = response.data.data.week
         }
       }).catch(error => {
         console.log(error);
@@ -156,15 +120,22 @@ export default {
         path: '/date'
       })
     },
-    feeling(){
+    feeling() {
       this.route.replace({
         path: '/felling'
       })
     },
-    wealth(){
+    wealth() {
       this.route.replace({
         path: '/wealth'
       })
+    },
+    openDetail(value) {
+      this.$alert(value, "第"+this.week+"周孕周详情", {
+        showConfirmButton: false,
+        customClass: 'custom-alert',
+        center: true
+      });
     }
   }
 }
@@ -177,7 +148,7 @@ export default {
   vertical-align: middle;
   border-radius: 5px;
   margin: 1px;
-  background: transparent url("http://www.life-moment.top/images/static/flower.jpg");
+  background: transparent url("http://www.life-moment.top/images/static/baby1.jpg") center;
   background-size: cover;
 }
 
@@ -200,7 +171,7 @@ export default {
   width: 100%;
   height: 68%;
   overflow-y: auto;
-  background: transparent url("http://www.life-moment.top/images/static/bk4.jpg") center;
+  background: transparent url("http://www.life-moment.top/images/static/baby4.jpg") center;
   background-size: cover;
 }
 
@@ -231,6 +202,20 @@ export default {
   padding-top: 10px;
 }
 
+.pregnant-detail {
+  color: white;
+  padding-left: 10px;
+  padding-top: 10px;
+  font-size: 11px;
+  height: 35%;
+  line-height: 1.5em; /* 设置行高，确保多行文本垂直居中 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 在内容溢出时显示省略号 */
+  display: -webkit-box; /* 旧的WebKit浏览器 */
+  -webkit-line-clamp: 4; /* 限制显示的行数 */
+  -webkit-box-orient: vertical; /* 设置盒子为垂直方向 */
+}
+
 .title-desc {
   color: white;
   height: 80%;
@@ -249,8 +234,7 @@ export default {
 }
 
 .top {
-  height: 85%;
-  display: flex;
+  height: 100%;
 }
 
 .top-left {

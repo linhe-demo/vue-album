@@ -41,7 +41,7 @@
       <el-button circle><span style="font-size: 12px;" @click="feeling">星闪</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="wealth">福利</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="wealth">宝宝</span></el-button>
     </div>
   </div>
 </template>
