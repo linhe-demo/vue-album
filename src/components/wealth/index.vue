@@ -198,7 +198,6 @@ export default {
 
 .welcome {
   color: white;
-  font-size: 11px;
   padding-left: 10px;
   padding-top: 10px;
 }
@@ -206,7 +205,7 @@ export default {
 .pregnant-info {
   color: white;
   padding-left: 10px;
-  padding-top: 10px;
+  padding-top: 5px;
   font-size: 11px;
 }
 
