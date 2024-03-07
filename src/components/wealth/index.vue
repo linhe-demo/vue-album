@@ -2,8 +2,8 @@
   <div class="title">
     <div class="top">
       <div class="welcome">{{ welcome }}</div>
-      <div class="welcome">{{ dueDate }}</div>
-      <div class="welcome">{{ pregnantWeeks }}</div>
+      <div class="pregnant-info">{{ dueDate }}</div>
+      <div class="pregnant-info">{{ pregnantWeeks }}</div>
       <div class="pregnant-detail" @click="openDetail(pregnantWeeksDetail)">{{ pregnantWeeksDetail }}</div>
     </div>
   </div>
@@ -197,6 +197,13 @@ export default {
 }
 
 .welcome {
+  color: white;
+  font-size: 11px;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+.pregnant-info {
   color: white;
   padding-left: 10px;
   padding-top: 10px;
