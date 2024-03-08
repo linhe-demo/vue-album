@@ -8,7 +8,40 @@
     </div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
-    <div class="card-list">
+    <div class="news-ticker">
+      <span ref="tickerText" @click="noticeDetail(text)" class="ticker-text">{{ text }}</span>
+    </div>
+    <div class="baby-info">
+      <div class="baby-title"><span>宝宝信息</span></div>
+      <div class="baby-detail">
+        <div class="baby-item">
+          <div class="baby-item-left"><span class="baby-item-title">小名：</span><span class="baby-item-value">糯糯（诺诺）</span></div>
+          <div class="baby-item-right"><span class="baby-item-title">学名：</span><span class="baby-item-value">暂无</span></div>
+        </div>
+        <div class="baby-item">
+          <div class="baby-item-left"><span class="baby-item-title">性别：</span><span class="baby-item-value">未知</span></div>
+          <div class="baby-item-right"><span class="baby-item-title">年龄：</span><span class="baby-item-value">未知</span></div>
+        </div>
+        <div class="baby-item">
+          <div class="baby-item-left"><span class="baby-item-title">生日：</span><span class="baby-item-value">未知</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="baby-life">
+      <div class="baby-title">
+        <div><span>宝宝成长记录</span></div>
+        <div style="float: right"><el-button type="default" @click="addBabyLife" round>新增</el-button></div>
+      </div>
+      <div class="baby-life-detail">
+        <el-timeline >
+          <el-timeline-item :timestamp="'2024-01-01'" placement="top">
+            <el-card>
+              <p style="font-weight: bold; text-align: left; line-height: 12px; color: #9f9f9f">喜讯</p>
+              <div style=" color: #9f9f9f;">开心 开心 哈哈哈</div>
+            </el-card>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
     </div>
   </div>
   <div class="foot">
@@ -23,14 +56,37 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+
+
+</script>
+
 <script>
+
 import {useStore} from 'vuex';
 import axios from "axios";
 import {useRoute, useRouter} from "vue-router";
 import router from "../../router";
+import { ref, onMounted, onUnmounted } from 'vue';
+const text = ref('这里是需要滚动的文字内容');
+const isScrolling = ref(false);
+onMounted(() => {
+  isScrolling.value = true;
+});
+
+onUnmounted(() => {
+  isScrolling.value = false;
+});
 
 export default {
   name: "Index",
+  props: {
+    newsText: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       customer: "",
@@ -54,7 +110,10 @@ export default {
       },
       loadDate: false,
       loading: "数据加载中，请稍后！",
-      dateInfo: []
+      dateInfo: [],
+      text: '人间的美好，源于幸运，来到这的你定好运爆膨！',
+      left: 0,
+      timer: null
     }
   },
   mounted() {
@@ -65,6 +124,11 @@ export default {
     this.route = useRouter()
     this.getConfig()
     this.getDateInfo()
+    this.adjustAnimationDuration();
+    window.addEventListener('resize', this.adjustAnimationDuration);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.adjustAnimationDuration);
   },
   methods: {
     getConfig() {
@@ -102,6 +166,7 @@ export default {
           this.pregnantWeeksDetail = response.data.data.pregnantWeeksDetail
           this.pregnantWeeks = response.data.data.pregnantWeeks
           this.week = response.data.data.week
+          this.text = response.data.data.noticeValue
         }
       }).catch(error => {
         console.log(error);
@@ -131,7 +196,31 @@ export default {
       })
     },
     openDetail(value) {
-      this.$alert(value, "第"+this.week+"周孕周详情", {
+      this.$alert(value, "第" + this.week + "周孕周详情", {
+        showConfirmButton: false,
+        customClass: 'custom-alert',
+        center: true
+      });
+    },
+    noticeDetail(value) {
+      this.$alert(value, "第" + this.week + "周孕妇注意事项", {
+        showConfirmButton: false,
+        customClass: 'custom-alert',
+        center: true
+      });
+    },
+    adjustAnimationDuration() {
+      const tickerText = this.$refs.tickerText;
+      const tickerContainer = tickerText.parentNode;
+      const tickerTextWidth = tickerText.scrollWidth;
+      const tickerContainerWidth = tickerContainer.offsetWidth;
+      console.log(tickerText, tickerContainer, tickerTextWidth, tickerContainerWidth)
+      // 根据文本和容器的宽度动态计算动画持续时间
+       // 假设基础速度是10秒完成一个容器的宽度
+      tickerText.style.animationDuration = (tickerTextWidth / tickerContainerWidth) * 40 + 's';
+    },
+    addBabyLife() {
+      this.$alert("功能开发中敬请期待", "哈哈哈", {
         showConfirmButton: false,
         customClass: 'custom-alert',
         center: true
@@ -175,25 +264,55 @@ export default {
   background-size: cover;
 }
 
-.card-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 将容器分为三等分 */
-  grid-gap: 1px; /* 卡片之间的间距 */
+.baby-info{
+  height: 20%;
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.card {
-  margin-left: 10px;
-  margin-top: 20px;
-  height: 100px;
-  width: 84%;
-  line-height: 40px;
-  text-align: center;
+.baby-life{
+  height: 68%;
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.baby-title{
+  color: #9f9f9f;
   font-weight: bold;
-  color: white;
-  border: 1px solid #dddddd;
-  border-radius: 4px;
-  background-color: #b8c8d8;
-  padding-bottom: 20px;
+  font-size: 12px;
+  margin-bottom: 10px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.baby-detail{
+  width: 100%;
+  height: 80%;
+  border: 1px dashed  white;
+  border-radius: 5px;
+}
+
+.baby-item{
+  display: inline-flex;
+  font-size: 11px;
+  width: 100%;
+}
+
+.baby-item-title{
+  color: #9f9f9f;
+}
+
+.baby-item-value {
+  color: #40c9c6;
+}
+
+.baby-item-left{
+  padding-left: 10px;
+  width: 48%;
+}
+.baby-item-right{
+  width: 48%;
 }
 
 .welcome {
@@ -205,21 +324,22 @@ export default {
 .pregnant-info {
   color: white;
   padding-left: 10px;
-  padding-top: 5px;
+  padding-top: 10px;
+  font-weight: bold;
   font-size: 11px;
 }
 
 .pregnant-detail {
-  color: white;
+  color: #dfdfdf;
   padding-left: 10px;
-  padding-top: 10px;
+  padding-top: 15px;
   font-size: 11px;
-  height: 35%;
+  height: 25%;
   line-height: 1.5em; /* 设置行高，确保多行文本垂直居中 */
   overflow: hidden;
   text-overflow: ellipsis; /* 在内容溢出时显示省略号 */
   display: -webkit-box; /* 旧的WebKit浏览器 */
-  -webkit-line-clamp: 4; /* 限制显示的行数 */
+  -webkit-line-clamp: 2; /* 限制显示的行数 */
   -webkit-box-orient: vertical; /* 设置盒子为垂直方向 */
 }
 
@@ -244,17 +364,33 @@ export default {
   height: 100%;
 }
 
-.top-left {
-  width: 52%;
-  height: 100%;
+
+.news-ticker {
+  width: 100%; /* 或你需要的任何宽度 */
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.top-right {
-  width: 48%;
-  height: 100%;
-  color: white;
+.ticker-text {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll-ticker linear infinite;
   font-size: 11px;
-  line-height: 18px;
+  color: #6a6a6a;
+  font-weight: bolder;
 }
+
+@keyframes scroll-ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+::v-deep(.el-card) {
+  background-color: #f2ecde;
+}
+
 </style>
 

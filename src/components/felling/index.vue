@@ -32,7 +32,7 @@
     </div>
     <div class="block">
       <el-timeline >
-        <el-timeline-item v-for="(item, index) in timelineItems" :timestamp="item.date" :color="red"  placement="top">
+        <el-timeline-item v-for="(item, index) in timelineItems" :timestamp="item.date"  placement="top">
           <el-card @click="open(item.title, item.text)">
             <p style="font-weight: bold; text-align: left; line-height: 12px;">{{ item.title }}</p>
             <div class="box-text">{{ item.text }}</div>
