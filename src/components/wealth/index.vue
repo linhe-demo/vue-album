@@ -81,12 +81,6 @@ onUnmounted(() => {
 
 export default {
   name: "Index",
-  props: {
-    newsText: {
-      type: String,
-      required: true,
-    },
-  },
   data() {
     return {
       customer: "",
@@ -214,7 +208,6 @@ export default {
       const tickerContainer = tickerText.parentNode;
       const tickerTextWidth = tickerText.scrollWidth;
       const tickerContainerWidth = tickerContainer.offsetWidth;
-      console.log(tickerText, tickerContainer, tickerTextWidth, tickerContainerWidth)
       // 根据文本和容器的宽度动态计算动画持续时间
        // 假设基础速度是10秒完成一个容器的宽度
       tickerText.style.animationDuration = (tickerTextWidth / tickerContainerWidth) * 40 + 's';
@@ -372,6 +365,7 @@ export default {
 }
 
 .ticker-text {
+  will-change: transform;
   display: inline-block;
   padding-left: 100%;
   animation: scroll-ticker linear infinite;
