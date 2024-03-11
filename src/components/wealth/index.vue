@@ -81,24 +81,6 @@ onUnmounted(() => {
 
 export default {
   name: "Index",
-  setup(){
-    const myDiv = ref(null);
-
-    const addClass = () => {
-      if (myDiv.value) {
-        myDiv.value.classList.add('animation-demo');
-      }
-    };
-
-    onMounted(() => {
-      // 确保 DOM 元素已经挂载
-    });
-
-    return {
-      myDiv,
-      addClass,
-    };
-  },
   data() {
     return {
       customer: "",
@@ -138,6 +120,9 @@ export default {
     this.getDateInfo()
     this.adjustAnimationDuration();
     window.addEventListener('resize', this.adjustAnimationDuration);
+    setTimeout(()=>{
+      this.$refs.tickerText.classList.add('animation-demo');
+    },20)
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.adjustAnimationDuration);
@@ -229,7 +214,6 @@ export default {
       // 根据文本和容器的宽度动态计算动画持续时间
        // 假设基础速度是10秒完成一个容器的宽度
       tickerText.style.animationDuration = (tickerTextWidth / tickerContainerWidth) * 40 + 's';
-      this.$refs.tickerText.classList.add('animation-demo');
     },
     addBabyLife() {
       this.$alert("功能开发中敬请期待", "哈哈哈", {
