@@ -287,13 +287,13 @@ export default {
   height: 80%;
   border: 1px dashed  white;
   border-radius: 5px;
-  padding-top: 10px;
 }
 
 .baby-item{
   display: inline-flex;
   font-size: 11px;
   width: 100%;
+  padding-top: 10px
 }
 
 .baby-item-title{
