@@ -377,15 +377,15 @@ export default {
 }
 
 ::v-deep(.animation-demo) {
-  animation: scroll-ticker linear infinite;
+  -webkit-animation: scroll-ticker linear infinite;
 }
 
 @keyframes scroll-ticker {
   0% {
-    transform: translateX(0);
+    -webkit-transform: translateX(0);
   }
   100% {
-    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
   }
 }
 ::v-deep(.el-card) {
