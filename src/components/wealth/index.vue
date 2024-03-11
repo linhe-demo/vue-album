@@ -122,7 +122,7 @@ export default {
     window.addEventListener('resize', this.adjustAnimationDuration);
     setTimeout(()=>{
       this.$refs.tickerText.classList.add('animation-demo');
-    },20)
+    },1000)
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.adjustAnimationDuration);
@@ -287,6 +287,7 @@ export default {
   height: 80%;
   border: 1px dashed  white;
   border-radius: 5px;
+  padding-top: 10px;
 }
 
 .baby-item{
@@ -335,7 +336,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis; /* 在内容溢出时显示省略号 */
   display: -webkit-box; /* 旧的WebKit浏览器 */
-  -webkit-line-clamp: 2; /* 限制显示的行数 */
+  -webkit-line-clamp: 3; /* 限制显示的行数 */
   -webkit-box-orient: vertical; /* 设置盒子为垂直方向 */
 }
 
