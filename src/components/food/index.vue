@@ -2,7 +2,7 @@
     <div class="top">
         <div class="welcome">
             <el-button type="default" @click="back" class="btn">返回</el-button>
-            <div class="title-desc">宝妈遇到下列食物当下哦</div>
+            <div class="title-desc">宝妈遇到下列食物当心哦</div>
         </div>
     </div>
     <div class="detail" v-loading.fullscreen="loadPicture" :element-loading-text="loading">
@@ -16,13 +16,13 @@
             </el-table-column>
             <el-table-column label="危险等级" align="center">
                 <template v-slot="scope">
-                    <span v-if="scope.row.level === 1" style="color: red;font-weight: bold;">x</span>
+                    <span v-if="scope.row.level === 1" style="color: red;font-weight: bold;font-size: 13px">x</span>
                     <span v-if="scope.row.level === 2" style="color: greenyellow;font-weight: bold;">O</span>
                 </template>
             </el-table-column>
             <el-table-column prop="危害" label="不可吃原因" align="center">
                 <template v-slot="scope" class="specialColor">
-                    <span style="color: #adadad;font-weight: 400;">{{ scope.row.reason }}</span>
+                    <span style="color: #adadad;font-size: 11px;">{{ scope.row.reason }}</span>
                 </template>
             </el-table-column>
         </el-table>

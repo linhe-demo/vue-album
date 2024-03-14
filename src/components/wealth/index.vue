@@ -6,7 +6,7 @@
             <div class="pregnant-info">{{ pregnantWeeks }}</div>
             <div class="pregnant-detail" @click="openDetail(pregnantWeeksDetail)">{{ pregnantWeeksDetail }}</div>
             <div class="top-btn" v-if="btnStatus">
-                <el-button type="default" @click="checkFood()" round>能吃否</el-button>
+                <el-button type="default" @click="checkFood()" round>吃否</el-button>
             </div>
         </div>
     </div>
