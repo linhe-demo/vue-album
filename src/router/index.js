@@ -8,6 +8,7 @@ import Picture from '../components/picture/picture.vue'
 import Date from '../components/datecard/date.vue'
 import Felling from '../components/felling/index.vue'
 import Wealth from '../components/wealth/index.vue'
+import Food from '../components/food/index.vue'
 
 const routes = [
     {
@@ -54,6 +55,11 @@ const routes = [
         path: "/wealth",
         name: 'wealth',
         component: Wealth
+    },
+    {
+        path: "/food",
+        name: 'food',
+        component: Food
     }
 ]
 
