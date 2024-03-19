@@ -55,10 +55,10 @@
       </div>
       <div class="baby-life-detail">
         <el-timeline>
-          <el-timeline-item :timestamp="'2024-01-01'" placement="top">
-            <el-card>
-              <p style="font-weight: bold; text-align: left; line-height: 12px; color: #9f9f9f">喜讯</p>
-              <div style=" color: #9f9f9f;">开心 开心 哈哈哈</div>
+          <el-timeline-item v-for="(item, index) in babyLife" :timestamp="item.date"  placement="top">
+            <el-card @click="openBabyLife(item.id, item.title, item.text)">
+              <p style="font-weight: bold; text-align: left; line-height: 12px; color: #9f9f9f">{{ item.title }}</p>
+              <div style=" color: #9f9f9f;">{{ item.text }}</div>
             </el-card>
           </el-timeline-item>
         </el-timeline>
@@ -176,6 +176,7 @@ export default {
       left: 0,
       timer: null,
       baby_list: [],
+      babyLife: [],
       babyForm: {
         name: '',
         desc: '',
@@ -191,6 +192,7 @@ export default {
     this.token = store.state.user.token
     this.route = useRouter()
     this.getDateInfo()
+    this.getBabyLifeInfo()
     this.adjustAnimationDuration();
     window.addEventListener('resize', this.adjustAnimationDuration);
     setTimeout(() => {
@@ -221,6 +223,20 @@ export default {
           this.baby_list = response.data.data.babyInfo
           this.foodsInfo = response.data.data.foodsInfo
           this.btnStatus = response.data.data.btnStatus
+        }
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    getBabyLifeInfo() {
+      let store = useStore()
+      axios.post(process.env.BASE_URL + '/api/v1/baby/life', {}, {
+        headers: {
+          'Authorization': store.state.user.token
+        }
+      }).then(response => {
+        if (response.data.code === 200) {
+          this.babyLife = response.data.data
         }
       }).catch(error => {
         console.log(error);
@@ -362,6 +378,16 @@ export default {
         });
       }).finally(e => {
         this.uploadLoadingStatus = false
+      })
+    },
+    openBabyLife(id, title, text){
+      this.route.replace({
+        path: '/babyLife',
+        query: {
+          id: id,
+          title: title,
+          text: text
+        }
       })
     }
   }
@@ -557,6 +583,10 @@ export default {
   width: 84%;
   max-height: 200px;
   overflow-y: auto;
+}
+
+::v-deep(.is-ready) {
+  width: 90%;
 }
 </style>
 
