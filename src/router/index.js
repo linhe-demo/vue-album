@@ -9,6 +9,7 @@ import Date from '../components/datecard/date.vue'
 import Felling from '../components/felling/index.vue'
 import Wealth from '../components/wealth/index.vue'
 import Food from '../components/food/index.vue'
+import BabyLife from '../components/babyLife/index.vue'
 
 const routes = [
     {
@@ -60,6 +61,11 @@ const routes = [
         path: "/food",
         name: 'food',
         component: Food
+    },
+    {
+        path: "/babyLife",
+        name: 'babyLife',
+        component: BabyLife
     }
 ]
 
