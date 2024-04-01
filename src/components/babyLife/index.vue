@@ -7,8 +7,8 @@
   </div>
   <div class="detail" v-loading.fullscreen="loadPicture" :element-loading-text="loading">
     <div class="baby-text">{{text}}</div>
-    <div class="baby-img" v-for="(item, index) in tableData.data">
-      <div class="demo-image__preview">
+    <div class="baby-img">
+      <div v-for="(item, index) in tableData.data" class="demo-image__preview">
         <el-image
             style="width: 100px; height: 100px"
             :src=item.url

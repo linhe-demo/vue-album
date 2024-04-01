@@ -558,6 +558,11 @@ export default {
   font-weight: bolder;
 }
 
+.baby-life-detail {
+  overflow-y: auto;
+  height: 86%;
+}
+
 ::v-deep(.animation-demo) {
   -webkit-animation: scroll-ticker linear infinite;
 }
