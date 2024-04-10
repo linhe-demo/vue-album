@@ -1,30 +1,34 @@
 <template>
   <div class="title">
     <div class="top">
-      <div class="top-left">
-        <div class="welcome">
-          欢迎 {{ customer }} 来小屋 ^_^
+      <div class="welcome">
+        <div class="welcome-text"> 欢迎 {{ customer }} ^_^</div>
+        <div class="container">
+          <div class="bar"></div>
         </div>
-        <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
       </div>
-      <div class="top-right">
-        <div style=" height: 55%;">
-          <div v-if="dateInfo.solarDate !== ''"> {{ dateInfo.solarDate }}</div>
-          <div v-if="dateInfo.lunarDate !== ''"> {{ dateInfo.lunarDate }}</div>
-          <div v-if="dateInfo.lunarTerm !== ''"> {{ dateInfo.lunarTerm }}</div>
-          <div style="display: flex">
-            <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
-            <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
-          </div>
+      <div class="info">
+        <div class="info-line">
+          <div v-if="dateInfo.solarDate !== ''" class="info-item"> {{ dateInfo.solarDate }}</div>
+          <div v-if="dateInfo.lunarDate !== ''" class="info-item"> {{ dateInfo.lunarDate }}</div>
         </div>
-        <div style=" height: 20%; padding-left: 78px;">
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
+        <div class="info-line">
+          <div v-if="dateInfo.lunarTerm !== ''" class="info-item-lunar"> {{ dateInfo.lunarTerm }}</div>
+          <div v-if="dateInfo.lunarFestival !== ''" class="info-item-lunar"> {{ dateInfo.lunarFestival }}</div>
+          <div v-if="dateInfo.solarFestival !== ''" class="info-item-lunar"> {{ dateInfo.solarFestival }}</div>
         </div>
+        <div class="info-line">
+          <div class="info-item" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
+          <div class="info-item" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
+        </div>
+        <div class="info-line">
+          <div class="info-item" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }} <i class="el-icon-loading"></i></div>
+        </div>
+      </div>
+      <div class="windmill">
+        <img class="rotate-image" src="http://www.life-moment.top/images/static/fengche.png">
       </div>
     </div>
-    <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
     <div class="card-list">
@@ -41,7 +45,7 @@
       <el-button circle><span style="font-size: 12px;" @click="feeling">星闪</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="wealth">宝宝</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="baby">宝宝</span></el-button>
     </div>
   </div>
 </template>
@@ -132,9 +136,9 @@ export default {
         path: '/felling'
       })
     },
-    wealth(){
+    baby(){
       this.route.replace({
-        path: '/wealth'
+        path: '/baby'
       })
     }
   }
@@ -196,41 +200,92 @@ export default {
   color: white;
   padding-left: 10px;
   padding-top: 10px;
-}
-
-.title-desc {
-  color: white;
-  height: 80%;
   display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  font-weight: bold;
-  font-size: 29px;
+  height: 15%;
 }
 
-.text {
-  color: white;
-  font-size: 12px;
-  text-align: right;
-  padding-right: 5px;
+.welcome-text {
+  width: 30%;
 }
 
 .top {
-  height: 85%;
-  display: flex;
-}
-
-.top-left {
-  width: 52%;
   height: 100%;
 }
 
-.top-right {
-  width: 48%;
-  height: 100%;
+.info {
+  width: 100%;
   color: white;
   font-size: 11px;
   line-height: 18px;
+  margin-top: 10px;
+}
+
+.info-item{
+  width: 48%;
+  font-size: 12px;font-weight: bold;
+  line-height: 20px;
+}
+
+.info-line {
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 5px;
+}
+
+.info-item-lunar{
+  width: 33%;
+}
+
+.container {
+  width: 70%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar {
+  width: 100px;
+  height: 10%;
+  background-color: white;
+  position: absolute;
+  border-radius: 5px;
+  animation: run 2s linear infinite alternate;
+}
+
+/* 创建关键帧动画 */
+@keyframes run {
+  0% { left: 0; }
+  100% { left: calc(100% - 100px); }
+}
+
+.windmill{
+  position: absolute;
+  right: 2%;
+  top: 13%;
+  width: 40px;
+  height: 40px;
+  z-index: 100;
+}
+
+.windmill img{
+  width: 100%;
+  height: 100%;
+}
+
+.rotate-image {
+  /* 定义一个持续的旋转动画 */
+  animation: spin 2s linear infinite;
+}
+
+/* 定义动画效果 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
 

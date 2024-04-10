@@ -81,7 +81,7 @@ export default {
     },
     back() {
       router.replace({
-        path: '/wealth',
+        path: '/baby',
         query: {
           date: this.date
         }

@@ -593,5 +593,9 @@ export default {
 ::v-deep(.is-ready) {
   width: 90%;
 }
+
+::v-deep(.el-timeline-item__wrapper) {
+  width: 88%;
+}
 </style>
 

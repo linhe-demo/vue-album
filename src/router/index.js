@@ -5,9 +5,9 @@ import Login from '../components/login/login.vue'
 import Error from '../components/error/error.vue'
 import Main from '../components/main/main.vue'
 import Picture from '../components/picture/picture.vue'
-import Date from '../components/datecard/date.vue'
+import Date from '../components/date/date.vue'
 import Felling from '../components/felling/index.vue'
-import Wealth from '../components/wealth/index.vue'
+import Baby from '../components/baby/index.vue'
 import Food from '../components/food/index.vue'
 import BabyLife from '../components/babyLife/index.vue'
 
@@ -53,9 +53,9 @@ const routes = [
         component: Felling
     },
     {
-        path: "/wealth",
-        name: 'wealth',
-        component: Wealth
+        path: "/baby",
+        name: 'baby',
+        component: Baby
     },
     {
         path: "/food",

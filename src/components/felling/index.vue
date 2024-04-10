@@ -1,38 +1,21 @@
 <template>
   <div class="title">
     <div class="top">
-      <div class="top-left">
-        <div class="welcome">
-          欢迎 {{ customer }} 来小屋 ^_^
-        </div>
-        <div class="title-desc">X&nbsp;L&nbsp;X&nbsp;Y</div>
+      <div class="welcome">
+        欢迎 {{ customer }} ^_^
       </div>
-      <div class="top-right">
-        <div style=" height: 55%;">
-          <div v-if="dateInfo.solarDate !== ''"> {{ dateInfo.solarDate }}</div>
-          <div v-if="dateInfo.lunarDate !== ''"> {{ dateInfo.lunarDate }}</div>
-          <div v-if="dateInfo.lunarTerm !== ''"> {{ dateInfo.lunarTerm }}</div>
-          <div style="display: flex">
-            <div v-if="dateInfo.lunarFestival !== ''"> {{ dateInfo.lunarFestival }}</div>
-            <div v-if="dateInfo.solarFestival !== ''"> {{ dateInfo.solarFestival }}</div>
-          </div>
-        </div>
-        <div style=" height: 20%; padding-left: 78px;">
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.firstMeeting !== ''"> {{ dateInfo.firstMeeting }}</div>
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
-          <div style="font-size: 12px;font-weight: bold;" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }}</div>
-        </div>
+      <div class="artistic-conception">
+        <p>&nbsp;&nbsp;{{ textToShow }}</p>
       </div>
     </div>
-    <div class="text">山气日夕佳，飞鸟相与还。此中有真意，欲辨已忘言</div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
     <div class="add-btn">
       <el-button type="primary" @click="addFeeling" round>新增</el-button>
     </div>
     <div class="block">
-      <el-timeline >
-        <el-timeline-item v-for="(item, index) in timelineItems" :timestamp="item.date"  placement="top">
+      <el-timeline>
+        <el-timeline-item v-for="(item, index) in timelineItems" :timestamp="item.date" placement="top">
           <el-card @click="open(item.title, item.text)">
             <p style="font-weight: bold; text-align: left; line-height: 12px;">{{ item.title }}</p>
             <div class="box-text">{{ item.text }}</div>
@@ -49,7 +32,7 @@
       <el-button type="primary" circle><span style="font-size: 12px;" @click="feeling">星闪</span></el-button>
     </div>
     <div class="box">
-      <el-button circle><span style="font-size: 12px;" @click="wealth">宝宝</span></el-button>
+      <el-button circle><span style="font-size: 12px;" @click="baby">宝宝</span></el-button>
     </div>
   </div>
 
@@ -104,7 +87,8 @@ export default {
       loading: "数据加载中，请稍后！",
       dateInfo: [],
       timelineItems: [],
-      form:{
+      textToShow: "",
+      form: {
         title: '',
         fellingText: ''
       },
@@ -119,8 +103,21 @@ export default {
     this.route = useRouter()
     this.getConfig()
     this.getDateInfo()
+    this.showTitle()
   },
   methods: {
+    showTitle(){
+      const fullText = "时光如流水，似静悄无声。岁月如涟漪，起伏波未行。浮生如沙粒，刹那即永恒。愿卿多留迹，夜半或黄昏。晨钟与暮鼓，明月伴星辰。流水虽无意，望卿加墨痕。待到耄耋纪，聚亲叙旧情。"
+      let idx = 0;
+      const intervalId = setInterval(() => {
+        if (idx < fullText.length) {
+          this.textToShow += fullText[idx];
+          idx += 1;
+        } else {
+          clearInterval(intervalId);
+        }
+      }, 50); // 调整这个参数可以控制文字出现的速度
+    },
     getConfig() {
       this.loadAlbum = true
       let store = useStore()
@@ -171,32 +168,32 @@ export default {
         path: '/date'
       })
     },
-    feeling(){
+    feeling() {
       this.route.replace({
         path: '/felling'
       })
     },
-    wealth(){
+    baby() {
       this.route.replace({
-        path: '/wealth'
+        path: '/baby'
       })
     },
-    open(title, value){
+    open(title, value) {
       this.$alert(value, title, {
         showConfirmButton: false,
         customClass: 'custom-alert',
         center: true
       });
     },
-    addFeeling(){
+    addFeeling() {
       this.dialogVisible = true
     },
-    cancel(){
+    cancel() {
       this.form.fellingText = ''
       this.form.title = ""
       this.dialogVisible = false
     },
-    submit(){
+    submit() {
       if (this.form.title.length === 0) {
         this.$message({
           type: 'warning',
@@ -271,9 +268,9 @@ export default {
   width: 100%;
   height: 68%;
   overflow-y: auto;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: transparent url("http://www.life-moment.top/images/static/bk4.jpg") center;
   background-size: cover;
   text-align: center;
@@ -283,82 +280,67 @@ export default {
   color: white;
   padding-left: 10px;
   padding-top: 10px;
+  width: 100%;
 }
-
-.title-desc {
-  color: white;
-  height: 80%;
-  display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center; /* 垂直居中 */
-  font-weight: bold;
-  font-size: 29px;
-}
-
-.text {
+.artistic-conception{
   color: white;
   font-size: 12px;
-  text-align: right;
-  padding-right: 5px;
+  font-weight: bolder;
+  padding-right: 10px;
+  line-height: 20px;
+  padding-left: 10px;
+  padding-top: 10px;
 }
 
 .top {
-  height: 85%;
-  display: flex;
-}
-
-.top-left {
-  width: 52%;
   height: 100%;
 }
 
-.top-right {
-  width: 48%;
-  height: 100%;
-  color: white;
-  font-size: 11px;
-  line-height: 18px;
-}
-
-.block{
+.block {
   width: 90%;
   height: 100%;
   margin-top: 10px;
   padding-top: 10px;
 }
-.box-text{
-  overflow: hidden;  /* 隐藏超出部分 */
-  text-overflow: ellipsis;  /* 超出部分显示省略号 */
-  white-space: nowrap;  /* 文本不换行 */
+
+.box-text {
+  overflow: hidden; /* 隐藏超出部分 */
+  text-overflow: ellipsis; /* 超出部分显示省略号 */
+  white-space: nowrap; /* 文本不换行 */
   text-align: left;
   line-height: 20px;
 }
-.add-btn{
+
+.add-btn {
   position: absolute;
   top: 20.5%;
   right: 0.5%;
   z-index: 10;
 }
+
 .dialog-footer {
   text-align: center;
 }
+
 ::v-deep(.el-timeline) {
   padding-left: 0;
 }
+
 ::v-deep(.is-top) {
   text-align: left;
   color: white;
   font-weight: bold;
 }
+
 .quill-editor .ql-editor {
   height: 200px; /* 根据需要调整编辑器的高度 */
 }
 </style>
 
 <style>
-.custom-alert{
+.custom-alert {
   max-height: 81%;
-  overflow-y: auto!important;
+  overflow-y: auto !important;
 }
 </style>
 
