@@ -8,6 +8,9 @@
       <div class="top-btn" v-if="btnStatus">
         <el-button type="default" @click="checkFood()" round>吃否</el-button>
       </div>
+      <div v-if="percentage > 0" class="baby-percentage">
+        <el-progress :percentage="percentage"></el-progress>
+      </div>
     </div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
@@ -159,6 +162,7 @@ export default {
       btnStatus: false,
       pregnantWeeks: "",
       pregnantWeeksDetail: "",
+      percentage: '',
       foodsInfo: "",
       week: "",
       token: "",
@@ -217,6 +221,7 @@ export default {
           this.welcome = response.data.data.welcomeStr
           this.dueDate = response.data.data.dueDate
           this.pregnantWeeksDetail = response.data.data.pregnantWeeksDetail
+          this.percentage = response.data.data.percentage
           this.pregnantWeeks = response.data.data.pregnantWeeks
           this.week = response.data.data.week
           this.text = response.data.data.noticeValue
@@ -543,6 +548,14 @@ export default {
   right: 2px;
 }
 
+.baby-percentage {
+  position: absolute;
+  top: 6.6%;
+  right: 4%;
+  width: 130px;
+  color: white;
+}
+
 .news-ticker {
   width: 100%; /* 或你需要的任何宽度 */
   overflow: hidden;
@@ -596,6 +609,12 @@ export default {
 
 ::v-deep(.el-timeline-item__wrapper) {
   width: 88%;
+}
+
+::v-deep(.el-progress__text) {
+  font-size: 12px!important;
+  color: white;
+  font-weight: bolder;
 }
 </style>
 
