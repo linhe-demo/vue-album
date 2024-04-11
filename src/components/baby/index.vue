@@ -9,7 +9,7 @@
         <el-button type="default" @click="checkFood()" round>吃否</el-button>
       </div>
       <div v-if="percentage > 0" class="baby-percentage">
-        <el-progress :percentage="percentage"></el-progress>
+        <el-progress type="circle" :percentage="percentage"></el-progress>
       </div>
     </div>
   </div>
@@ -550,7 +550,7 @@ export default {
 
 .baby-percentage {
   position: absolute;
-  top: 6.5%;
+  top: 3%;
   right: 6%;
   width: 130px;
   color: white;
@@ -615,6 +615,12 @@ export default {
   font-size: 12px!important;
   color: white;
   font-weight: bolder;
+  left: -2px!important;
+}
+
+::v-deep(.el-progress-circle) {
+  width: 45px!important;
+  height: 45px!important;
 }
 </style>
 
