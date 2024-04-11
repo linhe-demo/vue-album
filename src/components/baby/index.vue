@@ -551,7 +551,7 @@ export default {
 .baby-percentage {
   position: absolute;
   top: 6.6%;
-  right: 4%;
+  right: 6%;
   width: 130px;
   color: white;
 }
