@@ -3,9 +3,6 @@
     <div class="top">
       <div class="welcome">
         <div class="welcome-text"> 欢迎 {{ customer }} ^_^</div>
-        <div class="container">
-          <div class="bar"></div>
-        </div>
       </div>
       <div class="info">
         <div class="info-line">
@@ -235,28 +232,6 @@ export default {
 
 .info-item-lunar{
   width: 33%;
-}
-
-.container {
-  width: 70%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.bar {
-  width: 100px;
-  height: 10%;
-  background-color: white;
-  position: absolute;
-  border-radius: 5px;
-  animation: run 2s linear infinite alternate;
-}
-
-/* 创建关键帧动画 */
-@keyframes run {
-  0% { left: 0; }
-  100% { left: calc(100% - 100px); }
 }
 
 .windmill{
