@@ -30,7 +30,7 @@
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
     <div class="user-img" v-if="imgList">
       <div></div>
-      <el-carousel :interval="3000" style="height: 100%;border-radius: 5px;" arrow="hover" >
+      <el-carousel :interval="3000" style="height: 100%;width:100%;border-radius: 5px;" arrow="hover" >
         <el-carousel-item v-for="(value, index) in imgList" :key="index">
           <img :src="value.src" alt="" height="100%" width="100%" style="object-fit: cover">
         </el-carousel-item>
