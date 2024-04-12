@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="windmill">
-        <img v-if="imageLoaded" class="rotate-image" src="http://www.life-moment.top/images/static/fengche.png" alt="">
+        <img class="rotate-image" src="http://www.life-moment.top/images/static/fengche.png" alt="">
       </div>
     </div>
   </div>
