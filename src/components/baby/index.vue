@@ -434,15 +434,14 @@ export default {
 }
 
 .baby-info {
-  height: 23%;
+  height: 33%;
   padding-top: 10px;
   padding-left: 10px;
   padding-right: 10px;
 }
 
 .baby-life {
-  height: 63%;
-  padding-top: 30px;
+  height: 60%;
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -465,7 +464,7 @@ export default {
 
 .baby-item {
   display: inline-flex;
-  font-size: 11px;
+  font-size: 14px;
   width: 100%;
   padding-top: 6px
 }
@@ -558,6 +557,7 @@ export default {
 
 .news-ticker {
   width: 100%; /* 或你需要的任何宽度 */
+  height: 4%;
   overflow: hidden;
   white-space: nowrap;
 }

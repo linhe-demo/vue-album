@@ -184,7 +184,7 @@ export default {
   vertical-align: middle;
   border-radius: 5px;
   padding: 1px;
-  background: transparent url("http://www.life-moment.top/images/static/time.jpg");
+  background: transparent url("http://www.life-moment.top/images/static/time4.jpg");
   background-size: cover;
 }
 
@@ -206,7 +206,7 @@ export default {
 .date-box {
   width: 100%;
   height: 68%;
-  background: transparent url("http://www.life-moment.top/images/static/bk4.jpg") center;
+  background: transparent url("http://www.life-moment.top/images/static/time6.jpg") center;
   background-size: cover;
 }
 
@@ -333,7 +333,11 @@ export default {
 }
 
 ::v-deep(.is-always-shadow) {
-  opacity: 0.5;
+  opacity: 0.8;
+}
+
+::v-deep(.el-card__body) {
+  color: #529b8b;
 }
 
 
