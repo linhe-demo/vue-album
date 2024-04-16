@@ -185,7 +185,7 @@ export default {
   border-radius: 5px;
   padding: 1px;
   background: transparent url("http://www.life-moment.top/images/static/time4.jpg");
-  background-size: cover;
+  background-size: auto;
 }
 
 .foot {
