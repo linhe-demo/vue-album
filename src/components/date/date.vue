@@ -228,6 +228,7 @@ export default {
 .daily {
   height: 54%;
   overflow-y: auto;
+  opacity: 0.88;
   background-color: rgba(255, 255, 255, 0.5);
   margin: 10px;
   border-radius: 5px;
