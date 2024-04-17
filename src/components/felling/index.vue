@@ -243,8 +243,6 @@ export default {
   width: 100%;
   height: 20%;
   vertical-align: middle;
-  border-radius: 5px;
-  margin: 1px;
   background: transparent url("http://www.life-moment.top/images/static/flower.jpg");
   background-size: cover;
 }

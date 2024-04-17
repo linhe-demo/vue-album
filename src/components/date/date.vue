@@ -19,7 +19,8 @@
           <div class="info-item" v-if="dateInfo.certificateDay !== ''"> {{ dateInfo.certificateDay }}</div>
         </div>
         <div class="info-line">
-          <div class="info-item" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }} <i class="el-icon-loading"></i></div>
+          <div class="info-item" v-if="dateInfo.marryDay !== ''"> {{ dateInfo.marryDay }} <i
+              class="el-icon-loading"></i></div>
         </div>
       </div>
       <div class="windmill">
@@ -28,20 +29,26 @@
     </div>
   </div>
   <div class="date-box" v-loading.fullscreen="loadDate" :element-loading-text="loading">
-    <div class="user-img" v-if="imgList">
-      <el-carousel :interval="3000" style="height: 100%;width:100%;border-radius: 5px;" arrow="hover" >
-        <el-carousel-item v-for="(value, index) in imgList" :key="index">
-          <img :src="value.src" alt="" height="100%" width="100%" style="object-fit: cover;width:100%;height:100%;">
-        </el-carousel-item>
-      </el-carousel>
-    </div>
-    <div class="daily">
-      <div class="card-list">
-        <el-card class="card" v-for="(item, index) in dateList" :key="index" shadow="always" @click="showTimeLine(item)">
-          {{ item }}
-        </el-card>
+    <transition name="stretch">
+      <div class="user-img" :style="{ width: width}" v-if="imgList">
+        <el-carousel :interval="3000" style="height: 100%;width:100%;border-radius: 5px;" arrow="hover">
+          <el-carousel-item v-for="(value, index) in imgList" :key="index">
+            <img :src="value.src" alt="" height="100%" width="100%" style="object-fit: cover;width:100%;height:100%;">
+          </el-carousel-item>
+        </el-carousel>
       </div>
-    </div>
+    </transition>
+
+    <transition name="fade">
+      <div class="daily">
+        <div v-if="show" class="card-list">
+          <el-card class="card" v-for="(item, index) in dateList" :key="index" shadow="always"
+                   @click="showTimeLine(item)">
+            {{ item }}
+          </el-card>
+        </div>
+      </div>
+    </transition>
   </div>
   <div class="foot">
     <div class="box">
@@ -80,7 +87,9 @@ export default {
       loading: "数据加载中，请稍后！",
       dateInfo: [],
       imgList: false,
-      imageLoaded: false
+      imageLoaded: false,
+      width: '0%',
+      show: false
     }
   },
   mounted() {
@@ -92,6 +101,13 @@ export default {
     this.getImgList()
     this.getConfig()
     this.getDateInfo()
+    setTimeout(() => {
+      this.width = '95%'; // 或者你想要的任何宽度
+    }, 50); // 触发渲染后稍微延迟改变宽度，以导致动画
+
+    setTimeout(() => {
+      this.show = true;
+    }, 2000)
   },
   methods: {
     getConfig() {
@@ -159,12 +175,12 @@ export default {
         path: '/date'
       })
     },
-    feeling(){
+    feeling() {
       this.route.replace({
         path: '/felling'
       })
     },
-    baby(){
+    baby() {
       this.route.replace({
         path: '/baby'
       })
@@ -182,7 +198,6 @@ export default {
   width: 100%;
   height: 20%;
   vertical-align: middle;
-  border-radius: 5px;
   padding: 1px;
   background: transparent url("http://www.life-moment.top/images/static/time4.jpg");
   background-size: auto;
@@ -211,8 +226,11 @@ export default {
 }
 
 .daily {
-  height: 60%;
+  height: 54%;
   overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 10px;
+  border-radius: 5px;
 }
 
 .card-list {
@@ -256,9 +274,10 @@ export default {
   margin-top: 10px;
 }
 
-.info-item{
+.info-item {
   width: 48%;
-  font-size: 12px;font-weight: bold;
+  font-size: 12px;
+  font-weight: bold;
   line-height: 20px;
 }
 
@@ -267,6 +286,8 @@ export default {
   padding-right: 10px;
   padding-left: 10px;
   height: 40%;
+  transition: transform 1s linear;
+  transform-origin: center;
 }
 
 .info-line {
@@ -276,11 +297,11 @@ export default {
   margin-top: 5px;
 }
 
-.info-item-lunar{
+.info-item-lunar {
   width: 33%;
 }
 
-.windmill{
+.windmill {
   position: absolute;
   right: 2%;
   top: 1%;
@@ -289,7 +310,7 @@ export default {
   z-index: 100;
 }
 
-.windmill img{
+.windmill img {
   width: 100%;
   height: 100%;
 }
@@ -324,6 +345,27 @@ export default {
 .el-carousel__item:nth-child(2n+1) {
   background-color: #d3dce6;
 }
+
+.stretch-enter-active, .stretch-leave-active {
+  transition: transform 1s linear;
+}
+
+.stretch-enter-from, .stretch-leave-to {
+  transform: scaleX(0);
+}
+
+.fade-enter-active {
+  transition: opacity 2s;
+}
+
+.fade-enter-from {
+  opacity: 0;
+}
+
+.fade-enter-to {
+  opacity: 0.8;
+}
+
 ::v-deep(.el-carousel__indicators) {
   display: none;
 }
@@ -338,6 +380,7 @@ export default {
 
 ::v-deep(.el-card__body) {
   color: #529b8b;
+  border-radius: 5px;
 }
 
 
