@@ -40,8 +40,8 @@
     </transition>
 
     <transition name="fade">
-      <div class="daily">
-        <div v-if="show" class="card-list">
+      <div v-if="show" class="daily">
+        <div class="card-list">
           <el-card class="card" v-for="(item, index) in dateList" :key="index" shadow="always"
                    @click="showTimeLine(item)">
             {{ item }}
@@ -104,10 +104,9 @@ export default {
     setTimeout(() => {
       this.width = '95%'; // 或者你想要的任何宽度
     }, 50); // 触发渲染后稍微延迟改变宽度，以导致动画
-
     setTimeout(() => {
       this.show = true;
-    }, 2000)
+    }, 1000);
   },
   methods: {
     getConfig() {
@@ -228,7 +227,6 @@ export default {
 .daily {
   height: 54%;
   overflow-y: auto;
-  opacity: 0.88;
   background-color: rgba(255, 255, 255, 0.5);
   margin: 10px;
   border-radius: 5px;
@@ -364,7 +362,7 @@ export default {
 }
 
 .fade-enter-to {
-  opacity: 0.8;
+  opacity: 0.88;
 }
 
 ::v-deep(.el-carousel__indicators) {
