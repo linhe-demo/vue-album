@@ -91,7 +91,7 @@ onMounted(() => {
 
   function createExplosion(x, y, color) {
     const particles = [];
-    const numParticles = Math.random() * 20 + 10;
+    const numParticles = Math.random() * 90 + 10;
     for (let i = 0; i < numParticles; i++) {
       const angle = (Math.PI / 15) * i;
       const velocity = {
