@@ -1,4 +1,5 @@
 <template>
+  <Fireworks v-if="showFirework" />
   <div class="title">
     <div class="top">
       <div class="welcome">
@@ -67,9 +68,13 @@ import {useStore} from 'vuex';
 import axios from "axios";
 import {useRoute, useRouter} from "vue-router";
 import router from "../../router";
+import Fireworks from '/src/components/firework/index.vue';
 
 export default {
   name: "Index",
+  components: {
+    Fireworks,
+  },
   data() {
     return {
       customer: "",
@@ -89,7 +94,8 @@ export default {
       imgList: false,
       imageLoaded: false,
       width: '0%',
-      show: false
+      show: false,
+      showFirework: false
     }
   },
   mounted() {
@@ -103,10 +109,10 @@ export default {
     this.getDateInfo()
     setTimeout(() => {
       this.width = '95%'; // 或者你想要的任何宽度
-    }, 50); // 触发渲染后稍微延迟改变宽度，以导致动画
+    }, 50); // 触发渲染后稍微延迟改变宽度，以导致动画npm
     setTimeout(() => {
       this.show = true;
-    }, 1000);
+    }, 1000)
   },
   methods: {
     getConfig() {
@@ -156,6 +162,7 @@ export default {
       }).then(response => {
         if (response.data.code === 200) {
           this.dateInfo = response.data.data
+          this.showFirework = response.data.data.firework
         }
       }).catch(error => {
         console.log(error);
