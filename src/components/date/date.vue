@@ -4,6 +4,7 @@
     <div class="top">
       <div class="welcome">
         <div class="welcome-text"> 欢迎 {{ customer }} ^_^</div>
+        <div v-if="dateInfo.anniversary" class="anniversary">{{ dateInfo.anniversary }}</div>
       </div>
       <div class="info">
         <div class="info-line">
@@ -372,6 +373,21 @@ export default {
   opacity: 0.88;
 }
 
+
+@keyframes flicker {
+  0%   { opacity: 1; }
+  50%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.anniversary {
+  animation: flicker 2s linear infinite;
+  padding-left: 20%;
+  font-size: 13px;
+  color: #BF00FF;
+  font-weight: bolder;
+}
+
 ::v-deep(.el-carousel__indicators) {
   display: none;
 }
@@ -388,7 +404,5 @@ export default {
   color: #529b8b;
   border-radius: 5px;
 }
-
-
 </style>
 
