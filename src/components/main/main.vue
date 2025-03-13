@@ -144,7 +144,7 @@ export default {
         }
       }).then(response => {
         if (response.data.code === 200) {
-          this.$router.go(0)
+          this.route.replace({path: '/'});
           this.dialogVisible = false;
         } else {
           alert(response.data.message);
