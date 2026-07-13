@@ -1,22 +1,15 @@
 <template>
   <div class="login-page">
-    <!-- 背景装饰元素 -->
-    <div class="decoration">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-    </div>
+    <!-- 动态背景光晕 -->
+    <div class="bg-glow"></div>
 
-    <!-- 登录表单卡片 -->
     <div class="login-container">
       <div class="login-card">
-        <!-- 表单头部 -->
         <div class="form-header">
-          <h2 class="title">{{ registerStatus ? '用户注册' : '用户登录' }}</h2>
-          <p class="subtitle">{{ registerStatus ? '创建您的个人账户' : '欢迎回来，请登录您的账户' }}</p>
+          <h2 class="title">{{ registerStatus ? '创建账号' : '欢迎回来' }}</h2>
+          <p class="subtitle">{{ registerStatus ? '填写信息，加入我们' : '登录以继续你的旅程' }}</p>
         </div>
 
-        <!-- 登录/注册表单 -->
         <el-form
             ref="loginForm"
             :model="loginData"
@@ -24,99 +17,86 @@
             @submit.native.prevent
             class="login-form"
         >
-          <!-- 用户名输入 -->
           <el-form-item prop="userName">
-            <div class="input-with-icon">
-              <i class="icon-user"></i>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
               <el-input
                   v-model="loginData.userName"
-                  placeholder="请输入用户名"
+                  placeholder="用户名"
                   size="large"
-              ></el-input>
+                  class="fancy-input"
+              />
             </div>
           </el-form-item>
 
-          <!-- 密码输入 -->
           <el-form-item prop="passWord">
-            <div class="input-with-icon">
-              <i class="icon-lock"></i>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
               <el-input
                   type="password"
                   v-model="loginData.passWord"
-                  placeholder="请输入密码"
+                  placeholder="密码"
                   size="large"
                   show-password
-              ></el-input>
+                  class="fancy-input"
+              />
             </div>
           </el-form-item>
 
-          <!-- 昵称输入（仅注册时显示） -->
           <el-form-item v-show="registerStatus" prop="nickname">
-            <div class="input-with-icon">
-              <i class="icon-nickname"></i>
+            <div class="input-wrapper">
+              <span class="input-icon">✏️</span>
               <el-input
                   v-model="loginData.nickname"
-                  placeholder="请输入昵称"
+                  placeholder="昵称"
                   size="large"
-              ></el-input>
+                  class="fancy-input"
+              />
             </div>
           </el-form-item>
 
-          <!-- 按钮区域 -->
           <div class="form-actions">
             <el-button
                 v-show="registerStatus"
                 type="default"
                 @click="backLogin"
-                class="btn secondary"
+                class="btn btn-outline"
             >
-              <i class="icon-back"></i>
-              返回登录
+              返回
             </el-button>
-
             <el-button
                 v-show="loginStatus"
                 type="primary"
                 @click="login"
-                class="btn primary"
+                class="btn btn-primary"
                 :loading="loading"
             >
-              <i class="icon-login"></i>
               登录
             </el-button>
-
             <el-button
                 v-show="loginStatus"
                 type="default"
                 @click="register"
-                class="btn secondary"
+                class="btn btn-outline"
             >
-              <i class="icon-register"></i>
-              注册账户
+              注册
             </el-button>
-
             <el-button
                 v-show="registerStatus"
                 type="primary"
                 @click="commit"
-                class="btn primary"
+                class="btn btn-primary"
                 :loading="loading"
             >
-              <i class="icon-commit"></i>
               提交注册
             </el-button>
           </div>
         </el-form>
 
-        <!-- 页脚 -->
         <div class="form-footer">
-          <div class="copyright">
-            <p>© 2021-{{ currentYear }} 林鹤 版权所有</p>
-          </div>
+          <p class="copyright">© 2021-{{ currentYear }} 林鹤 版权所有</p>
           <div class="beian">
-            <a target="_blank" href="https://beian.miit.gov.cn/">
-              豫ICP备2023017522号-1
-            </a>
+            <a target="_blank" href="https://beian.miit.gov.cn/">豫ICP备2023017522号-1</a>
             <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=41152502000215">
               <img src="http://www.life-moment.top/images/static/batb.png" alt="备案图标"/>
               豫公网安备 41152502000215号
@@ -130,38 +110,24 @@
 
 <script>
 import axios from "axios";
-import {useStore} from 'vuex'
-import {useRouter} from "vue-router";
+import { useStore } from 'vuex'
+import { useRouter } from "vue-router";
 
 export default {
   data() {
-    // 表单验证规则
     const validateUserName = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入用户名'));
-      } else if (value.length < 3) {
-        callback(new Error('用户名至少3个字符'));
-      } else {
-        callback();
-      }
+      if (!value) return callback(new Error('请输入用户名'));
+      if (value.length < 3) return callback(new Error('用户名至少3个字符'));
+      callback();
     };
-
     const validatePassword = (rule, value, callback) => {
-      if (!value) {
-        callback(new Error('请输入密码'));
-      } else if (value.length < 6) {
-        callback(new Error('密码至少6个字符'));
-      } else {
-        callback();
-      }
+      if (!value) return callback(new Error('请输入密码'));
+      if (value.length < 6) return callback(new Error('密码至少6个字符'));
+      callback();
     };
-
     const validateNickname = (rule, value, callback) => {
-      if (this.registerStatus && !value) {
-        callback(new Error('请输入昵称'));
-      } else {
-        callback();
-      }
+      if (this.registerStatus && !value) return callback(new Error('请输入昵称'));
+      callback();
     };
 
     return {
@@ -178,17 +144,10 @@ export default {
       registerStatus: false,
       loginStatus: true,
       loading: false,
-      // 表单验证规则
       formRules: {
-        userName: [
-          { validator: validateUserName, trigger: 'blur' }
-        ],
-        passWord: [
-          { validator: validatePassword, trigger: 'blur' }
-        ],
-        nickname: [
-          { validator: validateNickname, trigger: 'blur' }
-        ]
+        userName: [{ validator: validateUserName, trigger: 'blur' }],
+        passWord: [{ validator: validatePassword, trigger: 'blur' }],
+        nickname: [{ validator: validateNickname, trigger: 'blur' }]
       }
     };
   },
@@ -202,372 +161,321 @@ export default {
     login() {
       this.$refs.loginForm.validate((valid) => {
         if (!valid) {
-          this.$message({
-            type: 'warning',
-            message: '请正确填写表单'
-          });
+          this.$message({ type: 'warning', message: '请正确填写表单' });
           return;
         }
-
         this.loading = true;
-
         axios.post(process.env.BASE_URL + '/api/v1/user/login', this.loginData)
             .then(res => {
               this.loading = false;
               if (res.data.code === 200) {
                 this.store.commit("user/updateUserToken", res.data.data.token)
                 this.store.commit("user/updateUserNickname", res.data.data.nickname)
-                this.$message({
-                  type: 'success',
-                  message: '登录成功'
-                });
-                this.route.replace({path: '/date'});
+                this.$message({ type: 'success', message: '登录成功' });
+                this.route.replace({ path: '/date' });
               } else {
-                this.$message({
-                  type: 'error',
-                  message: res.data.message
-                });
+                this.$message({ type: 'error', message: res.data.message });
               }
             })
             .catch(error => {
               this.loading = false;
               console.log(error);
-              this.$message({
-                type: 'error',
-                message: '网络错误，请稍后重试'
-              });
+              this.$message({ type: 'error', message: '网络错误，请稍后重试' });
             });
       });
     },
-
     autoLogin() {
       let token = useStore().state.user.token
       axios.post(process.env.BASE_URL + '/api/v1/auto/login', this.loginData, {
-        headers: {
-          'Authorization': token
-        }
+        headers: { 'Authorization': token }
       })
           .then(res => {
             if (res.data.code === 200) {
-              this.route.replace({path: '/date'});
+              this.route.replace({ path: '/date' });
             }
           })
-          .catch(error => {
-            console.log(error);
-          });
+          .catch(error => { console.log(error); });
     },
-
     register() {
       this.registerStatus = true
       this.loginStatus = false
-      // 重置表单验证状态
-      this.$nextTick(() => {
-        this.$refs.loginForm.clearValidate();
-      });
+      this.$nextTick(() => { this.$refs.loginForm.clearValidate(); });
     },
-
     commit() {
       this.$refs.loginForm.validate((valid) => {
         if (!valid) {
-          this.$message({
-            type: 'warning',
-            message: '请正确填写表单'
-          });
+          this.$message({ type: 'warning', message: '请正确填写表单' });
           return;
         }
-
         this.loading = true;
-
         axios.post(process.env.BASE_URL + '/api/v1/user/register', this.loginData)
             .then(res => {
               this.loading = false;
               if (res.data.code === 200) {
-                this.$message({
-                  type: 'success',
-                  message: res.data.data.msg || '注册成功'
-                });
+                this.$message({ type: 'success', message: res.data.data.msg || '注册成功' });
                 this.backLogin()
               } else {
-                this.$message({
-                  type: 'error',
-                  message: res.data.data.msg || '注册失败'
-                });
+                this.$message({ type: 'error', message: res.data.data.msg || '注册失败' });
               }
             })
             .catch(error => {
               this.loading = false;
               console.log(error);
-              this.$message({
-                type: 'error',
-                message: '网络错误，请稍后重试'
-              });
+              this.$message({ type: 'error', message: '网络错误，请稍后重试' });
             });
       });
     },
-
     backLogin() {
       this.registerStatus = false
       this.loginStatus = true
-      // 重置表单验证状态
-      this.$nextTick(() => {
-        this.$refs.loginForm.clearValidate();
-      });
+      this.$nextTick(() => { this.$refs.loginForm.clearValidate(); });
     }
   }
 };
 </script>
 
 <style scoped>
+/* ----- 全局重置 & 背景 ----- */
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  overflow: hidden;
   padding: 20px;
-}
-
-/* 背景装饰元素 */
-.decoration {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
+  background: linear-gradient(145deg, #f5f0ff 0%, #e8f0fe 100%);
+  position: relative;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   overflow: hidden;
-  z-index: 0;
 }
 
-.shape {
+/* 动态光晕 */
+.bg-glow {
   position: absolute;
+  width: 500px;
+  height: 500px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.shape-1 {
-  width: 300px;
-  height: 300px;
-  top: -150px;
+  background: radial-gradient(circle at 30% 40%, rgba(167, 139, 250, 0.25) 0%, transparent 70%);
+  top: -100px;
   right: -100px;
+  animation: floatGlow 12s ease-in-out infinite alternate;
+}
+@keyframes floatGlow {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  100% { transform: translate(-60px, 80px) scale(1.2); opacity: 1; }
+}
+.bg-glow::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 70% 60%, rgba(196, 181, 253, 0.2) 0%, transparent 70%);
+  bottom: -150px;
+  left: -150px;
+  animation: floatGlow2 15s ease-in-out infinite alternate;
+}
+@keyframes floatGlow2 {
+  0% { transform: translate(0, 0) scale(0.8); }
+  100% { transform: translate(80px, -60px) scale(1.3); }
 }
 
-.shape-2 {
-  width: 200px;
-  height: 200px;
-  bottom: -50px;
-  left: -50px;
-}
-
-.shape-3 {
-  width: 150px;
-  height: 150px;
-  bottom: 20%;
-  right: 10%;
-}
-
-/* 登录容器 */
+/* ----- 卡片（毛玻璃） ----- */
 .login-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 400px;
   z-index: 1;
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  padding: 40px 35px;
-  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 32px;
+  padding: 40px 36px 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .login-card:hover {
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08);
 }
 
-/* 表单头部 */
+/* ----- 头部 ----- */
 .form-header {
-  text-align: center;
-  margin-bottom: 30px;
+  text-align: left;
+  margin-bottom: 28px;
 }
-
 .form-header .title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
+  font-size: 26px;
+  font-weight: 300;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+  letter-spacing: -0.5px;
 }
-
 .form-header .subtitle {
   font-size: 14px;
-  color: #666;
+  font-weight: 300;
+  color: rgba(26, 26, 46, 0.5);
   margin: 0;
+  letter-spacing: 0.2px;
 }
 
-/* 表单样式 */
+/* ----- 表单输入（极简下划线风格） ----- */
 .login-form {
-  margin-top: 10px;
-}
-
-.input-with-icon {
-  position: relative;
-}
-
-.input-with-icon i {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #999;
-  z-index: 2;
-}
-
-.input-with-icon i::before {
-  font-size: 18px;
-}
-
-.icon-user::before {
-  content: "👤";
-}
-
-.icon-lock::before {
-  content: "🔒";
-}
-
-.icon-nickname::before {
-  content: "👋";
-}
-
-.icon-back::before {
-  content: "←";
-  margin-right: 5px;
-}
-
-.icon-login::before {
-  content: "→";
-  margin-right: 5px;
-}
-
-.icon-register::before {
-  content: "📝";
-  margin-right: 5px;
-}
-
-.icon-commit::before {
-  content: "✓";
-  margin-right: 5px;
-}
-
-:deep(.el-input__inner) {
-  padding-left: 45px !important;
-  height: 50px;
-  border-radius: 10px;
-  border: 1px solid #e1e5e9;
-  transition: all 0.3s;
-}
-
-:deep(.el-input__inner:focus) {
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+  margin-top: 6px;
 }
 
 :deep(.el-form-item) {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-/* 按钮样式 */
+.input-wrapper {
+  position: relative;
+}
+.input-icon {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: rgba(26, 26, 46, 0.3);
+  z-index: 2;
+  line-height: 1;
+  pointer-events: none;
+}
+
+:deep(.fancy-input .el-input__wrapper) {
+  border: none;
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  background: transparent;
+  padding: 0 0 0 30px;
+  box-shadow: none !important;
+  transition: border-color 0.3s;
+}
+:deep(.fancy-input .el-input__wrapper:hover) {
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+}
+:deep(.fancy-input .el-input__wrapper.is-focus) {
+  border-bottom-color: #6c5ce7;
+}
+:deep(.fancy-input .el-input__inner) {
+  height: 44px;
+  font-size: 15px;
+  color: #1a1a2e;
+  background: transparent;
+  padding: 0;
+}
+:deep(.fancy-input .el-input__inner::placeholder) {
+  color: rgba(26, 26, 46, 0.3);
+  font-weight: 300;
+}
+
+/* 密码框后缀图标 */
+:deep(.fancy-input .el-input__suffix) {
+  color: rgba(26, 26, 46, 0.3);
+}
+
+/* ----- 按钮（胶囊式） ----- */
 .form-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 25px;
+  margin-top: 32px;
 }
 
 .btn {
   flex: 1;
-  min-width: 120px;
-  height: 46px;
-  border-radius: 10px;
-  font-weight: 600;
-  transition: all 0.3s;
+  min-width: 100px;
+  height: 48px;
+  border-radius: 40px;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  border: none;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
 }
 
-.btn.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
+.btn-primary {
+  background: #6c5ce7;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25);
 }
-
-.btn.primary:hover {
+.btn-primary:hover {
+  background: #5a4bd1;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+}
+.btn-primary:active {
+  transform: translateY(0);
 }
 
-.btn.secondary {
-  background: #f5f7fa;
-  color: #606266;
-  border: 1px solid #dcdfe6;
+.btn-outline {
+  background: transparent;
+  color: #6c5ce7;
+  border: 1.5px solid rgba(108, 92, 231, 0.2);
 }
-
-.btn.secondary:hover {
-  background: #e4e7ed;
+.btn-outline:hover {
+  background: rgba(108, 92, 231, 0.04);
+  border-color: #6c5ce7;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(108, 92, 231, 0.08);
+}
+.btn-outline:active {
+  transform: translateY(0);
 }
 
-/* 页脚样式 */
+/* 加载状态保留原有样式 */
+.btn-primary.is-loading {
+  background: #6c5ce7;
+}
+
+/* ----- 页脚 ----- */
 .form-footer {
-  margin-top: 30px;
+  margin-top: 28px;
   text-align: center;
 }
-
 .copyright p {
   font-size: 12px;
-  color: #999;
-  margin: 5px 0;
+  color: rgba(26, 26, 46, 0.3);
+  margin: 0 0 8px;
+  font-weight: 300;
 }
-
 .beian {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  margin-top: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
 }
-
 .beian a {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   font-size: 12px;
-  color: #999;
+  color: rgba(26, 26, 46, 0.3);
   text-decoration: none;
-  transition: color 0.3s;
+  transition: color 0.2s;
 }
-
 .beian a:hover {
-  color: #667eea;
+  color: #6c5ce7;
 }
-
 .beian img {
   height: 14px;
-  margin-right: 5px;
+  margin-right: 4px;
 }
 
-/* 响应式设计 */
+/* 响应式 */
 @media (max-width: 480px) {
   .login-card {
     padding: 30px 20px;
   }
-
   .form-actions {
     flex-direction: column;
   }
-
   .btn {
     width: 100%;
   }

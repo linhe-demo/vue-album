@@ -1,869 +1,551 @@
 <template>
-  <!-- 烟花效果 -->
   <Fireworks v-if="showFirework" />
 
-  <!-- 主容器 -->
   <div class="main-container">
-    <!-- 顶部欢迎区域 -->
-    <div class="welcome-section">
-      <!-- 背景装饰元素 -->
-      <div class="bg-decoration">
-        <div class="decoration-circle circle-1"></div>
-        <div class="decoration-circle circle-2"></div>
-        <div class="decoration-circle circle-3"></div>
-      </div>
-
+    <!-- ===== 顶部欢迎区域（间距宽松） ===== -->
+    <header class="welcome-section">
       <div class="welcome-content">
-        <!-- 欢迎文本和风车 -->
         <div class="welcome-header">
           <div class="welcome-texts">
-            <h1 class="welcome-title">欢迎 {{ customer }} <span class="emoji">^_^</span></h1>
+            <h1>欢迎 {{ customer }}</h1>
             <div v-if="dateInfo.anniversary" class="anniversary-badge">
-              <span class="anniversary-icon">🎉</span>
-              <span class="anniversary-text">{{ dateInfo.anniversary }}</span>
+              🎉 {{ dateInfo.anniversary }}
             </div>
           </div>
-
-          <!-- 风车装饰 -->
-          <div class="windmill-decoration">
-            <img class="windmill rotate-animation" src="http://www.life-moment.top/images/static/fengche.png" alt="风车">
-          </div>
+          <img
+              class="windmill"
+              src="http://www.life-moment.top/images/static/fengche.png"
+              alt="风车"
+          />
         </div>
 
-        <!-- 日期信息 -->
-        <div class="date-info-container">
-          <!-- 主要日期信息 -->
-          <div class="primary-date-info">
-            <div v-if="dateInfo.solarDate" class="date-item solar-date">
-              <i class="date-icon">📅</i>
-              <span>{{ dateInfo.solarDate }}</span>
-            </div>
-            <div v-if="dateInfo.lunarDate" class="date-item lunar-date">
-              <i class="date-icon">🌙</i>
-              <span>{{ dateInfo.lunarDate }}</span>
-            </div>
+        <div class="date-info">
+          <div class="info-row">
+            <span class="info-item">📅 {{ dateInfo.solarDate }}</span>
+            <span class="info-item">🌙 {{ dateInfo.lunarDate }}</span>
           </div>
-
-          <!-- 农历和节日信息 -->
-          <div class="secondary-date-info">
-            <div v-if="dateInfo.lunarTerm" class="date-tag lunar-term">
-              {{ dateInfo.lunarTerm }}
-            </div>
-            <div v-if="dateInfo.lunarFestival" class="date-tag lunar-festival">
-              {{ dateInfo.lunarFestival }}
-            </div>
-            <div v-if="dateInfo.solarFestival" class="date-tag solar-festival">
-              {{ dateInfo.solarFestival }}
-            </div>
+          <div class="info-row">
+            <span v-if="dateInfo.lunarTerm" class="info-item term">{{ dateInfo.lunarTerm }}</span>
+            <span v-if="dateInfo.lunarFestival" class="info-item festival lunar">{{ dateInfo.lunarFestival }}</span>
+            <span v-if="dateInfo.solarFestival" class="info-item festival solar">{{ dateInfo.solarFestival }}</span>
           </div>
-
-          <!-- 纪念日信息 -->
-          <div class="memorial-dates">
-            <div v-if="dateInfo.firstMeeting" class="memorial-item">
-              <i class="memorial-icon">💑</i>
-              <span>{{ dateInfo.firstMeeting }}</span>
-            </div>
-            <div v-if="dateInfo.certificateDay" class="memorial-item">
-              <i class="memorial-icon">📜</i>
-              <span>{{ dateInfo.certificateDay }}</span>
-            </div>
-            <div v-if="dateInfo.marryDay" class="memorial-item">
-              <i class="memorial-icon">💍</i>
-              <span>{{ dateInfo.marryDay }} <i class="el-icon-loading loading-icon"></i></span>
-            </div>
+          <div class="info-row memorial">
+            <span v-if="dateInfo.firstMeeting" class="info-item">💑 {{ dateInfo.firstMeeting }}</span>
+            <span v-if="dateInfo.certificateDay" class="info-item">📜 {{ dateInfo.certificateDay }}</span>
+            <span v-if="dateInfo.marryDay" class="info-item">💍 {{ dateInfo.marryDay }}</span>
           </div>
         </div>
       </div>
-    </div>
+    </header>
 
-    <!-- 中间内容区域 -->
-    <div class="content-section" v-loading.fullscreen="loadDate" :element-loading-text="loading">
-      <!-- 图片轮播 -->
-      <transition name="slide-expand">
-        <div class="image-carousel-container" :style="{ width: carouselWidth }" v-if="imgList">
-          <el-carousel
-              :interval="4000"
-              height="100%"
-              arrow="always"
-              indicator-position="outside"
-              class="custom-carousel"
+    <!-- ===== 中间内容 ===== -->
+    <main class="content-section" v-loading.fullscreen="loadDate" :element-loading-text="loading">
+      <!-- 轮播 -->
+      <div class="carousel-wrapper" v-if="imgList && imgList.length">
+        <el-carousel :interval="4000" height="100%" arrow="always" indicator-position="none">
+          <el-carousel-item v-for="(img, idx) in imgList" :key="idx">
+            <img :src="img.src" class="carousel-img" />
+            <div class="indicator">{{ idx+1 }} / {{ imgList.length }}</div>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <div v-else class="carousel-placeholder">
+        <span>🖼️</span>
+        <span>暂无图片</span>
+      </div>
+
+      <!-- 年份卡片 - 不占半屏，但卡片大、间距大 -->
+      <div class="cards-wrapper">
+        <div class="cards-grid">
+          <div
+              class="date-card"
+              v-for="(year, idx) in dateList"
+              :key="idx"
+              @click="showTimeLine(year)"
           >
-            <el-carousel-item v-for="(value, index) in imgList" :key="index">
-              <div class="carousel-image-wrapper">
-                <img
-                    :src="value.src"
-                    :alt="'相册图片' + (index + 1)"
-                    @load="handleLoad"
-                    class="carousel-image"
-                >
-                <div class="carousel-indicator">{{ index + 1 }} / {{ imgList.length }}</div>
-              </div>
-            </el-carousel-item>
-          </el-carousel>
-        </div>
-      </transition>
-
-      <!-- 日期卡片 -->
-      <transition name="fade-slide">
-        <div v-if="showDateCards" class="date-cards-container">
-          <div class="cards-header">
-            <h2 class="cards-title">时光记忆</h2>
-          </div>
-          <div class="cards-grid">
-            <div
-                class="date-card"
-                v-for="(item, index) in dateList"
-                :key="index"
-                @click="showTimeLine(item)"
-                :style="{ animationDelay: `${index * 0.1}s` }"
-            >
-              <div class="card-content">
-                <div class="card-icon">📅</div>
-                <div class="card-text">{{ item }}</div>
-              </div>
-              <div class="card-hover-effect"></div>
-            </div>
+            <div class="year">{{ year }}</div>
+            <div class="day">{{ currentDay }}</div>
+            <div class="month">{{ currentMonth }}月</div>
+            <div class="week">{{ currentWeek }}</div>
           </div>
         </div>
-      </transition>
-    </div>
+      </div>
+    </main>
 
-    <!-- 底部导航 -->
-    <div class="bottom-navigation">
-      <div class="nav-button" @click="footprints">
-        <div class="nav-icon">📚</div>
-        <div class="nav-text">岁月</div>
+    <!-- ===== 底部导航 ===== -->
+    <footer class="bottom-nav">
+      <div class="nav-item" @click="footprints">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">岁月</span>
       </div>
-      <div class="nav-button" @click="feeling">
-        <div class="nav-icon">✨</div>
-        <div class="nav-text">星闪</div>
+      <div class="nav-item" @click="feeling">
+        <span class="nav-icon">✨</span>
+        <span class="nav-label">星闪</span>
       </div>
-      <div class="nav-button" @click="baby">
-        <div class="nav-icon">👶</div>
-        <div class="nav-text">宝宝</div>
+      <div class="nav-item" @click="baby">
+        <span class="nav-icon">👶</span>
+        <span class="nav-label">宝宝</span>
       </div>
-    </div>
+    </footer>
   </div>
 </template>
 
 <script>
-import {useStore} from 'vuex';
+import { useStore } from 'vuex';
 import axios from "axios";
-import {useRoute, useRouter} from "vue-router";
-import router from "../../router";
+import { useRouter } from "vue-router";
 import Fireworks from '/src/components/firework/index.vue';
 
 export default {
   name: "Index",
-  components: {
-    Fireworks,
-  },
+  components: { Fireworks },
   data() {
     return {
-      customer: "",
-      currentYear: "",
+      customer: '',
       dateList: [],
-      route: {},
-      token: "",
-      dialogVisible: false,
-      albumForm: {
-        name: "",
-        desc: "",
-        date: ""
-      },
+      token: '',
       loadDate: false,
-      loading: "数据加载中，请稍后！",
-      dateInfo: [],
-      imgList: false,
-      imageLoaded: false,
-      carouselWidth: '0%',
-      showDateCards: false,
-      showFirework: false
-    }
+      loading: '加载中…',
+      dateInfo: {},
+      imgList: [],
+      currentMonth: '',
+      currentDay: '',
+      currentWeek: '',
+      dateTimer: null,
+      showFirework: false,
+      route: null,
+    };
   },
   mounted() {
-    this.currentYear = new Date().getFullYear()
-    let store = useStore()
-    this.customer = store.state.user.nickname
-    this.token = store.state.user.token
-    this.route = useRouter()
-    this.getImgList()
-    this.getConfig()
-    this.getDateInfo()
-
-    // 动画延迟触发
-    setTimeout(() => {
-      this.carouselWidth = '95%';
-    }, 100);
-
-    setTimeout(() => {
-      this.showDateCards = true;
-    }, 800)
+    const store = useStore();
+    this.customer = store.state.user.nickname;
+    this.token = store.state.user.token;
+    this.route = useRouter();
+    this.getConfig();
+    this.getImgList();
+    this.getDateInfo();
+    this.updateRealTimeDate();
+    this.dateTimer = setInterval(this.updateRealTimeDate, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.dateTimer);
   },
   methods: {
     getConfig() {
-      this.loadAlbum = true
-      let store = useStore()
+      this.loadDate = true;
       axios.post(process.env.BASE_URL + '/api/v1/date/list', {}, {
-        headers: {
-          'Authorization': store.state.user.token
-        }
-      }).then(response => {
-        if (response.data.code === 200) {
-          this.dateList = response.data.data
-        } else {
-          alert(response.data.message);
-          this.route.replace({path: '/'});
-        }
-        this.loadAlbum = false
-      }).catch(error => {
-        console.log(error);
-      });
+        headers: { Authorization: this.token }
+      }).then(res => {
+        if (res.data.code === 200) this.dateList = res.data.data || [];
+        else alert(res.data.message);
+        this.loadDate = false;
+      }).catch(() => { this.loadDate = false; });
     },
     getImgList() {
-      this.loadAlbum = true
-      let store = useStore()
       axios.post(process.env.BASE_URL + '/api/v1/image/list', {}, {
-        headers: {
-          'Authorization': store.state.user.token
-        }
-      }).then(response => {
-        if (response.data.code === 200) {
-          this.imgList = response.data.data
-        } else {
-          alert(response.data.message);
-          this.route.replace({path: '/'});
-        }
-        this.loadAlbum = false
-      }).catch(error => {
-        console.log(error);
+        headers: { Authorization: this.token }
+      }).then(res => {
+        if (res.data.code === 200) this.imgList = res.data.data || [];
+        else alert(res.data.message);
       });
     },
     getDateInfo() {
-      let store = useStore()
       axios.post(process.env.BASE_URL + '/api/v1/date/info', {}, {
-        headers: {
-          'Authorization': store.state.user.token
+        headers: { Authorization: this.token }
+      }).then(res => {
+        if (res.data.code === 200) {
+          this.dateInfo = res.data.data;
+          this.showFirework = res.data.data.firework;
         }
-      }).then(response => {
-        if (response.data.code === 200) {
-          this.dateInfo = response.data.data
-          this.showFirework = response.data.data.firework
-        }
-      }).catch(error => {
-        console.log(error);
       });
     },
-    showTimeLine(date) {
-      this.route.replace({
-        path: '/main',
-        query: {
-          date: date
-        }
-      })
+    showTimeLine(year) {
+      this.route.replace({ path: '/main', query: { date: year } });
     },
-    footprints() {
-      this.route.replace({
-        path: '/date'
-      })
-    },
-    feeling() {
-      this.route.replace({
-        path: '/felling'
-      })
-    },
-    baby() {
-      this.route.replace({
-        path: '/baby'
-      })
-    },
-    handleLoad() {
-      this.imageLoaded = true
-    },
+    footprints() { this.route.replace('/date'); },
+    feeling() { this.route.replace('/felling'); },
+    baby() { this.route.replace('/baby'); },
+    updateRealTimeDate() {
+      const now = new Date();
+      this.currentMonth = now.getMonth() + 1;
+      this.currentDay = now.getDate();
+      const weekDays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+      this.currentWeek = weekDays[now.getDay()];
+    }
   }
 }
 </script>
 
 <style scoped>
-/* 全局样式 */
+/* ---------- 重置 & 全局 ---------- */
+* { box-sizing: border-box; margin: 0; }
 .main-container {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(160deg, #f0f2f8 0%, #e4e8f2 100%);
   overflow: hidden;
-  position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* 欢迎区域样式 - 增加高度避免被遮挡 */
+/* ---------- 顶部（间距宽松） ---------- */
 .welcome-section {
-  height: 28%;
-  min-height: 180px;
-  background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* 提高层级确保在轮播图上方 */
+  background: linear-gradient(135deg, rgba(161,196,253,0.2), rgba(194,233,251,0.12));
+  backdrop-filter: blur(8px);
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  flex-shrink: 0;
 }
-
-/* 背景装饰元素 */
-.bg-decoration {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-}
-
-.decoration-circle {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.circle-1 {
-  width: 150px;
-  height: 150px;
-  top: -50px;
-  right: -30px;
-}
-
-.circle-2 {
-  width: 80px;
-  height: 80px;
-  bottom: -20px;
-  left: 10%;
-}
-
-.circle-3 {
-  width: 100px;
-  height: 100px;
-  bottom: 30%;
-  right: 15%;
-}
-
 .welcome-content {
-  padding: 15px 20px;
-  height: 100%;
+  display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  z-index: 2;
+  gap: 6px;
 }
-
 .welcome-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
-
 .welcome-texts {
-  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
-
-.welcome-title {
-  font-size: 1.8rem;
-  color: #2c3e50;
+.welcome-header h1 {
+  font-size: 1.3rem;
+  font-weight: 500;
   margin: 0;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
+  color: #1a1a2e;
 }
-
-.emoji {
-  margin-left: 8px;
-  font-size: 1.5rem;
-}
-
 .anniversary-badge {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255,255,255,0.7);
   border-radius: 20px;
-  padding: 5px 12px;
-  margin-top: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  animation: pulse 2s infinite;
-}
-
-.anniversary-icon {
-  margin-right: 5px;
-  font-size: 1rem;
-}
-
-.anniversary-text {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #e74c3c;
-}
-
-.windmill-decoration {
-  width: 50px;
-  height: 50px;
-}
-
-.windmill {
-  width: 100%;
-  height: 100%;
-}
-
-.rotate-animation {
-  animation: spin 8s linear infinite;
-}
-
-/* 日期信息样式 */
-.date-info-container {
-  margin-top: 10px;
-}
-
-.primary-date-info {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.date-item {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 10px;
-  padding: 6px 12px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #34495e;
-  min-width: 120px;
-}
-
-.date-icon {
-  margin-right: 5px;
-  font-size: 1rem;
-}
-
-.secondary-date-info {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.date-tag {
-  padding: 4px 10px;
-  border-radius: 15px;
+  padding: 2px 14px;
   font-size: 0.75rem;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.lunar-term {
-  background: rgba(52, 152, 219, 0.2);
-  color: #2980b9;
-}
-
-.lunar-festival {
-  background: rgba(231, 76, 60, 0.2);
   color: #c0392b;
 }
 
-.solar-festival {
-  background: rgba(46, 204, 113, 0.2);
-  color: #27ae60;
+.windmill {
+  width: 28px;
+  height: 28px;
+  animation: spin 10s linear infinite;
+  opacity: 0.6;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.memorial-dates {
+.date-info {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between; /* 项目之间均匀分布，第一行在两端，第二行在左边（如果只有两个） */
-  gap: 5px; /* 为了在行之间也有间距，我们使用gap */
-}
-
-.memorial-item {
-  flex: 0 0 48%; /* 不增长，不收缩，基础宽度48% */
-  display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
   font-size: 0.8rem;
   color: #2c3e50;
-  font-weight: 500;
+}
+.info-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.info-item {
+  padding: 1px 0;
+}
+.tags .info-item {
+  background: rgba(255,255,255,0.4);
+  padding: 0 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+}
+.term { color: #2980b9; }
+.festival.lunar { color: #c0392b; }
+.festival.solar { color: #27ae60; }
+.memorial .info-item {
+  font-size: 0.7rem;
 }
 
-.memorial-icon {
-  margin-right: 5px;
-  font-size: 0.9rem;
-}
-
-.loading-icon {
-  margin-left: 5px;
-  color: #3498db;
-}
-
-/* 内容区域样式 - 调整高度避免与头部重叠 */
+/* ---------- 中间内容 ---------- */
 .content-section {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10px 15px;
-  background: url("http://www.life-moment.top/images/static/time6.jpg") center/cover no-repeat;
-  position: relative;
+  padding: 6px 14px 6px;
+  min-height: 0;
   overflow: hidden;
-  min-height: 0; /* 确保flex布局正常工作 */
 }
 
-.content-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
-  z-index: 0;
-}
-
-/* 图片轮播样式 - 调整高度避免遮挡头部 */
-.image-carousel-container {
-  height: 40%;
-  min-height: 180px;
-  margin-bottom: 10px;
-  transition: width 1s ease-out;
-  z-index: 1;
-  position: relative;
-}
-
-.custom-carousel {
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+/* 轮播 - 占 55%，展示更充分 */
+.carousel-wrapper {
+  flex: 0 0 55%;
+  min-height: 80px;
+  max-height: 320px;
+  border-radius: 14px;
   overflow: hidden;
-  height: 100%;
+  background: rgba(255,255,255,0.1);
+  margin-bottom: 6px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
-
-.carousel-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.carousel-image {
+.carousel-wrapper .el-carousel { height: 100%; }
+.carousel-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-
-.carousel-indicator {
+.indicator {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  padding: 3px 8px;
-  border-radius: 10px;
-  font-size: 0.7rem;
-}
-
-/* 日期卡片样式 - 修复堆叠问题 */
-.date-cards-container {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.85);
+  bottom: 8px;
+  right: 12px;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  padding: 0 12px;
   border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  z-index: 1;
-  position: relative;
-  overflow: hidden;
+  font-size: 0.6rem;
+  backdrop-filter: blur(4px);
+}
+.carousel-placeholder {
+  flex: 0 0 55%;
+  min-height: 80px;
+  max-height: 320px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.08);
   display: flex;
   flex-direction: column;
-  min-height: 0; /* 确保flex布局正常工作 */
+  align-items: center;
+  justify-content: center;
+  color: #95a5a6;
+  border: 2px dashed rgba(108,92,231,0.06);
+  margin-bottom: 6px;
 }
+.carousel-placeholder span:first-child { font-size: 2.2rem; opacity: 0.3; }
+.carousel-placeholder span:last-child { font-size: 0.75rem; margin-top: 2px; }
 
-.cards-header {
-  margin-bottom: 15px;
-  text-align: center;
-  flex-shrink: 0; /* 防止标题区域被压缩 */
-}
-
-.cards-title {
-  font-size: 1.3rem;
-  color: #2c3e50;
-  margin: 0 0 5px 0;
-  font-weight: 600;
-}
-
-.cards-subtitle {
-  font-size: 0.8rem;
-  color: #7f8c8d;
+/* 日历卡片 - 不占半屏，但卡片大、间距大 */
+.cards-wrapper {
+  flex: 0 0 72%!important;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(6px);
+  border-radius: 14px;
+  padding: 8px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.02);
 }
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  height: 100%;
   overflow-y: auto;
-  padding: 5px;
-  flex: 1; /* 占据剩余空间 */
-  min-height: 0; /* 确保grid容器可以滚动 */
+  padding: 4px;
+  scrollbar-width: thin;
+  align-content: start;
 }
+.cards-grid::-webkit-scrollbar { width: 3px; }
+.cards-grid::-webkit-scrollbar-thumb { background: rgba(108,92,231,0.15); border-radius: 8px; }
 
 .date-card {
-  background: white;
-  border-radius: 10px;
-  padding: 15px 10px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  animation: card-appear 0.5s ease both;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(4px);
+  border-radius: 14px;
+  padding: 10px 4px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 80px; /* 确保卡片有固定最小高度 */
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255,255,255,0.3);
+  min-height: 72px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.02);
 }
-
 .date-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.85);
+  border-color: #6c5ce7;
+  box-shadow: 0 4px 16px rgba(108,92,231,0.12);
 }
-
-.card-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-  width: 100%;
+.date-card:active {
+  transform: scale(0.95);
 }
-
-.card-icon {
-  font-size: 1.5rem;
-  margin-bottom: 8px;
+.date-card .year {
+  font-weight: 700;
+  color: #6c5ce7;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
 }
-
-.card-text {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #3498db;
+.date-card .day {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a2e;
   line-height: 1.3;
-  word-break: break-word; /* 允许长文本换行 */
-  width: 100%;
+}
+.date-card .month {
+  font-size: 0.55rem;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+.date-card .week {
+  font-size: 0.45rem;
+  color: #95a5a6;
 }
 
-.card-hover-effect {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(155, 89, 182, 0.1) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
-}
-
-.date-card:hover .card-hover-effect {
-  opacity: 1;
-}
-
-/* 底部导航样式 */
-.bottom-navigation {
-  height: 10%;
-  min-height: 60px;
-  background: white;
+/* ---------- 底部导航（放大） ---------- */
+.bottom-nav {
   display: flex;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-  z-index: 2;
+  justify-content: space-around;
+  align-items: center;
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255,255,255,0.3);
+  padding: 14px 0 20px;
+  flex-shrink: 0;
 }
 
-.nav-button {
-  flex: 1;
+.nav-item {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  padding: 4px 32px;
+  border-radius: 16px;
   position: relative;
 }
-
-.nav-button:after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: #3498db;
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+.nav-item:hover {
+  transform: translateY(-3px);
 }
-
-.nav-button:hover:after,
-.nav-button.active:after {
-  transform: scaleX(1);
-}
-
-.nav-button:hover {
-  background: rgba(52, 152, 219, 0.05);
+.nav-item:active {
+  transform: scale(0.9);
 }
 
 .nav-icon {
-  font-size: 1.3rem;
-  margin-bottom: 3px;
+  font-size: 2rem;
+  line-height: 1.2;
+  transition: transform 0.3s ease;
+}
+.nav-item:hover .nav-icon {
+  transform: scale(1.15);
 }
 
-.nav-text {
-  font-size: 0.75rem;
+.nav-label {
+  font-size: 0.9rem;
   color: #2c3e50;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-top: 2px;
+  opacity: 0.6;
+  transition: all 0.3s ease;
 }
-
-/* 动画效果 */
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@keyframes card-appear {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.slide-expand-enter-active, .slide-expand-leave-active {
-  transition: all 1s ease;
-}
-
-.slide-expand-enter-from {
-  transform: scaleX(0);
-  opacity: 0;
-}
-
-.slide-expand-enter-to {
-  transform: scaleX(1);
+.nav-item:hover .nav-label {
   opacity: 1;
+  color: #6c5ce7;
 }
 
-.fade-slide-enter-active {
-  transition: all 0.8s ease;
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6c5ce7, #a29bfe);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+.nav-item:hover::after {
+  width: 50px;
 }
 
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.fade-slide-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .welcome-title {
-    font-size: 1.5rem;
-  }
-
-  .primary-date-info {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .date-card {
-    padding: 12px 8px;
-  }
-
-  .card-text {
-    font-size: 0.8rem;
-  }
-
-  .welcome-section {
-    height: 30%;
-  }
-
-  .image-carousel-container {
-    height: 35%;
-  }
-}
-
+/* ---------- 响应式 ---------- */
 @media (max-width: 480px) {
-  .welcome-title {
-    font-size: 1.3rem;
-  }
-
-  .cards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .secondary-date-info {
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .date-tag {
-    width: fit-content;
-  }
-
-  .nav-icon {
-    font-size: 1.1rem;
-  }
-
-  .nav-text {
-    font-size: 0.7rem;
-  }
-
   .welcome-section {
-    height: 32%;
+    padding: 8px 12px 6px;
+  }
+  .welcome-header h1 { font-size: 1.1rem; }
+  .date-info { font-size: 0.65rem; gap: 2px; }
+  .info-row { gap: 8px; }
+  .tags .info-item { font-size: 0.55rem; padding: 0 6px; }
+  .memorial .info-item { font-size: 0.6rem; }
+
+  .carousel-wrapper {
+    flex: 0 0 50%;
+    min-height: 60px;
+    max-height: 180px;
+  }
+  .carousel-placeholder {
+    flex: 0 0 50%;
+    min-height: 60px;
+    max-height: 180px;
   }
 
-  .image-carousel-container {
-    height: 30%;
+  .cards-wrapper {
+    flex: 0 0 42%;
+    padding: 6px 6px;
   }
+  .cards-grid {
+    gap: 6px;
+    padding: 2px;
+  }
+  .date-card {
+    min-height: 56px;
+    padding: 6px 2px;
+    border-radius: 10px;
+  }
+  .date-card .year { font-size: 0.6rem; }
+  .date-card .day { font-size: 1.1rem; }
+  .date-card .month { font-size: 0.45rem; }
+  .date-card .week { font-size: 0.35rem; }
+
+  .bottom-nav {
+    padding: 10px 0 14px;
+  }
+  .nav-icon { font-size: 1.6rem; }
+  .nav-label { font-size: 0.75rem; letter-spacing: 1px; }
+  .nav-item { padding: 2px 16px; }
+  .nav-item::after { height: 2px; }
+  .nav-item:hover::after { width: 30px; }
 }
 
-/* 自定义滚动条 */
-.cards-grid::-webkit-scrollbar {
-  width: 6px;
+@media (min-width: 481px) and (max-width: 768px) {
+  .carousel-wrapper {
+    flex: 0 0 52%;
+    max-height: 240px;
+  }
+  .carousel-placeholder {
+    flex: 0 0 52%;
+    max-height: 240px;
+  }
+  .cards-wrapper {
+    flex: 0 0 40%;
+  }
+  .date-card {
+    min-height: 64px;
+  }
+  .date-card .day { font-size: 1.2rem; }
 }
 
-.cards-grid::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 3px;
-}
-
-.cards-grid::-webkit-scrollbar-thumb {
-  background: rgba(52, 152, 219, 0.5);
-  border-radius: 3px;
-}
-
-.cards-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(52, 152, 219, 0.7);
+@media (min-width: 769px) {
+  .carousel-wrapper {
+    flex: 0 0 58%;
+    max-height: 380px;
+  }
+  .cards-wrapper {
+    flex: 0 0 35%;
+    padding: 10px 14px;
+  }
+  .cards-grid {
+    gap: 14px;
+  }
+  .date-card {
+    min-height: 84px;
+    padding: 12px 6px;
+    border-radius: 16px;
+  }
+  .date-card .day { font-size: 1.6rem; }
+  .date-card .year { font-size: 0.85rem; }
+  .date-card .month { font-size: 0.6rem; }
+  .date-card .week { font-size: 0.5rem; }
+  .nav-icon { font-size: 2.2rem; }
+  .nav-label { font-size: 1rem; }
 }
 </style>
